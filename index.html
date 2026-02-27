@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPT Query Extractor — Reveal ChatGPT's Hidden Search Logic</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Auto-send bulk prompts to ChatGPT and capture every internal search query it generates. Built for SEO pros, researchers, and data obsessives. Free Chrome Extension." />
+  <meta name="keywords" content="ChatGPT query extractor, Chrome extension, SEO tools, AI search queries, bulk prompts, ChatGPT SEO, query capture, GPT search intelligence" />
+  <meta name="author" content="GPT Query Extractor" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://gptqueryextractor.netlify.app/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://gptqueryextractor.netlify.app/" />
+  <meta property="og:title" content="GPT Query Extractor — Reveal ChatGPT's Hidden Search Logic" />
+  <meta property="og:description" content="Auto-send bulk prompts to ChatGPT and capture every internal search query it generates. Free Chrome Extension for SEO pros and researchers." />
+  <meta property="og:image" content="https://gptqueryextractor.netlify.app/preview.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="GPT Query Extractor — Reveal ChatGPT's Hidden Search Logic" />
+  <meta name="twitter:description" content="Capture every internal search query ChatGPT generates. Bulk prompts, auto-export, session history. Free Chrome Extension." />
+  <meta name="twitter:image" content="https://gptqueryextractor.netlify.app/preview.png" />
+
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "GPT Query Extractor",
+    "operatingSystem": "Chrome",
+    "applicationCategory": "BrowserApplication",
+    "description": "Auto-send bulk prompts to ChatGPT and capture every internal search query it generates. Built for SEO pros, researchers, and data obsessives.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "url": "https://gptqueryextractor.netlify.app/",
+    "version": "5.6"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #050a08;
+      --bg2: #0a1410;
+      --bg3: #0f1e16;
+      --green: #00c27a;
+      --green-dim: rgba(0,194,122,0.1);
+      --green-glow: rgba(0,194,122,0.35);
+      --text: #e0ede7;
+      --text2: #7aaa90;
+      --text3: #3d6352;
+      --mono: 'Space Mono', monospace;
+      --display: 'Syne', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--display);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    .cursor {
+      position: fixed; width: 12px; height: 12px;
+      background: var(--green); border-radius: 50%;
+      pointer-events: none; z-index: 99999; mix-blend-mode: screen;
+    }
+    .cursor-ring {
+      position: fixed; width: 36px; height: 36px;
+      border: 1px solid var(--green); border-radius: 50%;
+      pointer-events: none; z-index: 99998;
+      transition: width 0.2s, height 0.2s; opacity: 0.5;
+    }
+
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9998; opacity: 0.6;
+    }
+
+    .grid-bg {
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,194,122,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,194,122,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 20px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      backdrop-filter: blur(24px);
+      background: rgba(5,10,8,0.85);
+      border-bottom: 1px solid rgba(0,194,122,0.08);
+    }
+    .nav-logo { font-family: var(--mono); font-size: 13px; color: var(--green); letter-spacing: 2px; text-transform: uppercase; }
+    .nav-logo span { color: var(--text3); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text2); text-decoration: none; font-family: var(--mono); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--green); }
+    .nav-cta { background: var(--green); color: #000; font-family: var(--mono); font-size: 12px; letter-spacing: 1px; padding: 10px 22px; border-radius: 4px; text-decoration: none; font-weight: 700; transition: all 0.2s; }
+    .nav-cta:hover { background: #fff; box-shadow: 0 0 24px var(--green-glow); }
+
+    /* HERO */
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 120px 48px 80px; z-index: 1; overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute; width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(0,194,122,0.12) 0%, transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+      pointer-events: none; animation: breathe 6s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.8; }
+      50% { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+    }
+    .hero-content { max-width: 760px; position: relative; z-index: 2; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--green);
+      border: 1px solid rgba(0,194,122,0.3); padding: 6px 14px;
+      border-radius: 3px; margin-bottom: 36px; background: var(--green-dim);
+    }
+    .hero-tag::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green); animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+    h1 {
+      font-family: var(--display); font-size: clamp(52px, 7vw, 96px);
+      font-weight: 800; line-height: 0.95; letter-spacing: -3px;
+      color: var(--text); margin-bottom: 28px;
+    }
+    h1 .accent { color: var(--green); }
+    h1 .dim { color: var(--text3); }
+    .hero-desc { font-family: var(--mono); font-size: 14px; color: var(--text2); line-height: 1.9; max-width: 520px; margin-bottom: 52px; }
+    .hero-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--green); color: #000; font-family: var(--mono);
+      font-size: 13px; letter-spacing: 1px; font-weight: 700;
+      padding: 16px 32px; border-radius: 4px; text-decoration: none; transition: all 0.2s;
+    }
+    .btn-primary:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 8px 32px var(--green-glow); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--text2); font-family: var(--mono);
+      font-size: 13px; padding: 16px 28px; border-radius: 4px;
+      text-decoration: none; border: 1px solid var(--text3); transition: all 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--green); color: var(--green); }
+
+    .hero-stat-row {
+      position: absolute; right: 48px; top: 50%; transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 28px; z-index: 2;
+    }
+    .hero-stat { text-align: right; opacity: 0; animation: fadeIn 0.6s forwards; }
+    .hero-stat:nth-child(1) { animation-delay: 0.3s; }
+    .hero-stat:nth-child(2) { animation-delay: 0.5s; }
+    .hero-stat:nth-child(3) { animation-delay: 0.7s; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .hero-stat-num { font-family: var(--mono); font-size: 36px; font-weight: 700; color: var(--green); line-height: 1; }
+    .hero-stat-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); font-family: var(--mono); margin-top: 4px; }
+
+    .terminal-wrap {
+      position: absolute; right: 48px; bottom: 48px; z-index: 2;
+      width: 420px; background: var(--bg2);
+      border: 1px solid rgba(0,194,122,0.2); border-radius: 8px; overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+    }
+    .terminal-header {
+      background: var(--bg3); padding: 12px 16px;
+      display: flex; align-items: center; gap: 8px;
+      border-bottom: 1px solid rgba(0,194,122,0.1);
+    }
+    .dot-r { width: 10px; height: 10px; border-radius: 50%; background: #f85149; }
+    .dot-y { width: 10px; height: 10px; border-radius: 50%; background: #d29922; }
+    .dot-g { width: 10px; height: 10px; border-radius: 50%; background: #3fb950; }
+    .terminal-title { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-left: auto; }
+    .terminal-body { padding: 20px; font-family: var(--mono); font-size: 11px; line-height: 2; }
+    .t-line { display: flex; gap: 10px; }
+    .t-prompt { color: var(--green); flex-shrink: 0; }
+    .t-cmd { color: var(--text2); }
+    .t-output { color: var(--text3); padding-left: 20px; }
+    .t-result { color: var(--green); padding-left: 20px; }
+    .t-cursor { display: inline-block; width: 8px; height: 14px; background: var(--green); animation: blink 1s step-end infinite; vertical-align: middle; margin-left: 2px; }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* Sections */
+    section { position: relative; z-index: 1; }
+    .section-inner { max-width: 1200px; margin: 0 auto; padding: 120px 48px; }
+    .section-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--text3); margin-bottom: 20px; }
+    h2 { font-size: clamp(36px, 5vw, 64px); font-weight: 800; letter-spacing: -2px; line-height: 1; margin-bottom: 20px; }
+    h2 .g { color: var(--green); }
+    .section-desc { font-family: var(--mono); font-size: 13px; color: var(--text2); line-height: 1.9; max-width: 500px; }
+
+    /* Steps */
+    .steps {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 2px; margin-top: 72px;
+      border: 1px solid rgba(0,194,122,0.1); border-radius: 8px; overflow: hidden;
+    }
+    .step { padding: 40px 36px; background: var(--bg2); position: relative; transition: background 0.2s; }
+    .step:hover { background: var(--bg3); }
+    .step + .step { border-left: 2px solid rgba(0,194,122,0.08); }
+    .step-num { font-family: var(--mono); font-size: 72px; font-weight: 700; color: rgba(0,194,122,0.06); line-height: 1; position: absolute; top: 20px; right: 20px; }
+    .step-icon { width: 48px; height: 48px; background: var(--green-dim); border: 1px solid rgba(0,194,122,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 24px; }
+    .step h3 { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 12px; }
+    .step p { font-family: var(--mono); font-size: 12px; color: var(--text2); line-height: 1.8; }
+
+    /* Features */
+    .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; margin-top: 72px; }
+    .feature { background: var(--bg2); padding: 48px; position: relative; overflow: hidden; border: 1px solid rgba(0,194,122,0.06); border-radius: 4px; transition: border-color 0.2s; }
+    .feature:hover { border-color: rgba(0,194,122,0.25); }
+    .feature.wide { grid-column: 1 / -1; }
+    .feature-tag { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); background: var(--green-dim); border: 1px solid rgba(0,194,122,0.15); padding: 4px 10px; border-radius: 3px; display: inline-block; margin-bottom: 20px; }
+    .feature h3 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 12px; }
+    .feature p { font-family: var(--mono); font-size: 12px; color: var(--text2); line-height: 1.8; max-width: 380px; }
+    .feature-decoration { position: absolute; right: 40px; bottom: 40px; font-size: 64px; opacity: 0.06; pointer-events: none; font-family: var(--mono); color: var(--green); }
+
+    /* Use Cases */
+    .usecases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 64px; }
+    .usecase { border: 1px solid rgba(0,194,122,0.1); border-radius: 8px; padding: 28px; transition: all 0.2s; position: relative; overflow: hidden; }
+    .usecase::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--green), transparent); opacity: 0; transition: opacity 0.2s; }
+    .usecase:hover { background: var(--bg2); border-color: rgba(0,194,122,0.3); }
+    .usecase:hover::before { opacity: 1; }
+    .usecase-emoji { font-size: 28px; margin-bottom: 16px; }
+    .usecase h4 { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+    .usecase p { font-family: var(--mono); font-size: 11px; color: var(--text2); line-height: 1.8; }
+
+    /* Export */
+    .export-showcase { display: flex; gap: 16px; margin-top: 48px; flex-wrap: wrap; }
+    .export-pill { display: flex; align-items: center; gap: 12px; background: var(--bg2); border: 1px solid rgba(0,194,122,0.15); border-radius: 8px; padding: 16px 24px; flex: 1; min-width: 180px; transition: all 0.2s; }
+    .export-pill:hover { border-color: var(--green); background: var(--green-dim); }
+    .ep-icon { font-size: 28px; }
+    .ep-name { font-weight: 700; font-size: 14px; }
+    .ep-desc { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+    /* Pricing */
+    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 64px; border: 1px solid rgba(0,194,122,0.1); border-radius: 8px; overflow: hidden; }
+    .plan { padding: 48px; background: var(--bg2); position: relative; }
+    .plan.featured { background: var(--bg3); border-left: 2px solid var(--green); }
+    .plan-badge { position: absolute; top: 24px; right: 24px; background: var(--green); color: #000; font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; padding: 4px 10px; border-radius: 3px; }
+    .plan-price { font-size: 56px; font-weight: 800; letter-spacing: -2px; line-height: 1; color: var(--green); margin-bottom: 8px; }
+    .plan-price span { font-size: 20px; letter-spacing: 0; font-weight: 400; color: var(--text3); }
+    .plan-name { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); margin-bottom: 32px; }
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-bottom: 36px; }
+    .plan-features li { font-family: var(--mono); font-size: 12px; color: var(--text2); display: flex; align-items: center; gap: 10px; }
+    .plan-features li::before { content: '→'; color: var(--green); flex-shrink: 0; }
+    .plan-btn { display: block; background: var(--green); color: #000; font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 1px; text-align: center; padding: 14px; border-radius: 4px; text-decoration: none; transition: all 0.2s; }
+    .plan-btn.ghost { background: transparent; color: var(--text2); border: 1px solid var(--text3); }
+    .plan-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    /* FAQ */
+    .faq-list { margin-top: 64px; }
+    .faq-item { border-bottom: 1px solid rgba(0,194,122,0.08); padding: 28px 0; cursor: pointer; }
+    .faq-q { display: flex; justify-content: space-between; align-items: center; font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
+    .faq-arrow { font-family: var(--mono); color: var(--green); font-size: 20px; transition: transform 0.2s; flex-shrink: 0; }
+    .faq-item.open .faq-arrow { transform: rotate(45deg); }
+    .faq-a { font-family: var(--mono); font-size: 12px; color: var(--text2); line-height: 1.9; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding-top 0.2s; }
+    .faq-item.open .faq-a { max-height: 200px; padding-top: 18px; }
+
+    /* CTA */
+    .cta-section { border-top: 1px solid rgba(0,194,122,0.1); text-align: center; position: relative; overflow: hidden; }
+    .cta-glow { position: absolute; width: 600px; height: 300px; background: radial-gradient(ellipse, rgba(0,194,122,0.12) 0%, transparent 70%); top: 0; left: 50%; transform: translateX(-50%); }
+    .cta-inner { position: relative; z-index: 1; }
+
+    /* Footer */
+    footer { border-top: 1px solid rgba(0,194,122,0.06); padding: 32px 48px; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 1; }
+    .footer-logo { font-family: var(--mono); font-size: 12px; color: var(--text3); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-family: var(--mono); font-size: 11px; color: var(--text3); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--green); }
+    .footer-copy { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+
+    /* Reveal */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--text3); border-radius: 2px; }
+
+    @media (max-width: 900px) {
+      nav { padding: 16px 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 20px 60px; }
+      .hero-stat-row { display: none; }
+      .terminal-wrap { display: none; }
+      .section-inner { padding: 80px 20px; }
+      .steps { grid-template-columns: 1fr; }
+      .step + .step { border-left: none; border-top: 2px solid rgba(0,194,122,0.08); }
+      .features-grid { grid-template-columns: 1fr; }
+      .feature.wide { grid-column: 1; }
+      .usecases-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="grid-bg"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">GPT<span>/</span>Query<span>/</span>Extractor</div>
+  <ul class="nav-links">
+    <li><a href="#how">How it Works</a></li>
+    <li><a href="#features">Features</a></li>
+    
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="login.html" class="nav-cta">Login / Sign Up</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Chrome Extension v5.6</div>
+    <h1>
+      Crack<br>
+      ChatGPT's<br>
+      <span class="accent">Search</span><br>
+      <span class="dim">Intelligence</span>
+    </h1>
+    <p class="hero-desc">
+      Auto-send bulk prompts to ChatGPT and capture every internal search query it generates — at scale. Built for SEO pros, researchers, and data obsessives.
+    </p>
+    <div class="hero-actions">
+      <a href="login.html" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+        Add to Chrome — Free
+      </a>
+      <a href="#how" class="btn-ghost">See how it works ↓</a>
+    </div>
+  </div>
+
+  <div class="hero-stat-row">
+    <div class="hero-stat">
+      <div class="hero-stat-num">500+</div>
+      <div class="hero-stat-label">Prompts / Session</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">5.6</div>
+      <div class="hero-stat-label">Current Version</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">4</div>
+      <div class="hero-stat-label">Export Formats</div>
+    </div>
+  </div>
+
+  <div class="terminal-wrap">
+    <div class="terminal-header">
+      <div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div>
+      <span class="terminal-title">query-extractor — live</span>
+    </div>
+    <div class="terminal-body">
+      <div class="t-line"><span class="t-prompt">$</span><span class="t-cmd">running 12 prompts...</span></div>
+      <div class="t-line"><span class="t-output">▶ [1/12] "best SEO tools 2025"</span></div>
+      <div class="t-line"><span class="t-result">  ✓ "top SEO software comparison 2025"</span></div>
+      <div class="t-line"><span class="t-result">  ✓ "SEO tool reviews experts"</span></div>
+      <div class="t-line"><span class="t-result">  ✓ "best keyword research tools"</span></div>
+      <div class="t-line"><span class="t-output">▶ [2/12] "AI translation tools"</span></div>
+      <div class="t-line"><span class="t-result">  ✓ "machine translation accuracy benchmark"</span></div>
+      <div class="t-line"><span class="t-result">  ✓ "AI vs human translation quality"<span class="t-cursor"></span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-inner">
+    <div class="section-tag reveal">// Process</div>
+    <h2 class="reveal">How It <span class="g">Works</span></h2>
+    <p class="section-desc reveal">Three steps from installation to actionable query intelligence.</p>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <div class="step-icon">📂</div>
+        <h3>Upload Your Prompts</h3>
+        <p>Drop a .txt or .csv file — one prompt per line — or paste directly into the editor. Supports hundreds of prompts per session.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">02</div>
+        <div class="step-icon">⚡</div>
+        <h3>Automated Execution</h3>
+        <p>The extension auto-sends each prompt to ChatGPT, waits for the response, then intercepts the internal search queries generated under the hood.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">03</div>
+        <div class="step-icon">📊</div>
+        <h3>Export & Analyze</h3>
+        <p>All captured queries are organized by prompt. Export to JSON, CSV, or plain text. Search, filter, and copy results directly in the popup.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" style="background: var(--bg2);">
+  <div class="section-inner">
+    <div class="section-tag reveal">// Capabilities</div>
+    <h2 class="reveal">Built for <span class="g">Scale</span></h2>
+    <p class="section-desc reveal">Every feature engineered for power users who need results in bulk.</p>
+    <div class="features-grid">
+      <div class="feature reveal">
+        <div class="feature-tag">Core</div>
+        <h3>Bulk Prompt Engine</h3>
+        <p>Queue hundreds of prompts and let the extension handle everything — including configurable delay intervals (15–90 seconds) to avoid rate limits.</p>
+        <div class="feature-decoration">&gt;&gt;</div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature-tag">Smart</div>
+        <h3>Auto New Chat</h3>
+        <p>Automatically starts a fresh ChatGPT conversation every 20 prompts, preventing context contamination and avoiding session-level rate limits.</p>
+        <div class="feature-decoration">↻</div>
+      </div>
+      <div class="feature wide reveal">
+        <div class="feature-tag">Intelligence</div>
+        <h3>Deep Query Interception</h3>
+        <p>Intercepts ChatGPT's internal web search queries at the network layer — capturing exactly what the model searches, not just the response text. This reveals the true semantic interpretation of your prompts.</p>
+        <div class="feature-decoration">⬡⬡⬡</div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature-tag">Control</div>
+        <h3>Pause, Resume & Stop</h3>
+        <p>Full session control — pause mid-run, resume exactly where you left off, or stop and save partial results at any time.</p>
+        <div class="feature-decoration">⏸</div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature-tag">Memory</div>
+        <h3>Session History</h3>
+        <p>Every completed run is auto-saved with timestamp, prompt count, and query count. Browse, restore, and re-export any past session.</p>
+        <div class="feature-decoration">🕐</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 80px">
+      <div class="section-tag reveal">// Export</div>
+      <h2 class="reveal">Your Data, <span class="g">Your Format</span></h2>
+      <div class="export-showcase">
+        <div class="export-pill reveal">
+          <div class="ep-icon">{ }</div>
+          <div><div class="ep-name">JSON</div><div class="ep-desc">Structured, nested by prompt</div></div>
+        </div>
+        <div class="export-pill reveal">
+          <div class="ep-icon">⊞</div>
+          <div><div class="ep-name">CSV</div><div class="ep-desc">Flat table, spreadsheet-ready</div></div>
+        </div>
+        <div class="export-pill reveal">
+          <div class="ep-icon">≡</div>
+          <div><div class="ep-name">Plain Text</div><div class="ep-desc">One query per line</div></div>
+        </div>
+        <div class="export-pill reveal">
+          <div class="ep-icon">📋</div>
+          <div><div class="ep-name">Clipboard</div><div class="ep-desc">Copy any query instantly</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section id="usecases">
+  <div class="section-inner">
+    <div class="section-tag reveal">// Applications</div>
+    <h2 class="reveal">Who's <span class="g">Using It</span></h2>
+    <p class="section-desc reveal">From SEO agencies to academic researchers — query intelligence has a use in every data-driven workflow.</p>
+    <div class="usecases-grid">
+      <div class="usecase reveal">
+        <div class="usecase-emoji">🔍</div>
+        <h4>SEO Researchers</h4>
+        <p>Discover exactly which search queries ChatGPT associates with any topic. Build topical clusters, find related keywords, and understand semantic intent at scale.</p>
+      </div>
+      <div class="usecase reveal">
+        <div class="usecase-emoji">📈</div>
+        <h4>Content Strategists</h4>
+        <p>Use extracted queries to inform content briefs. Know what subtopics and questions surround any keyword — straight from the AI's internal reasoning.</p>
+      </div>
+      <div class="usecase reveal">
+        <div class="usecase-emoji">🎓</div>
+        <h4>AI Researchers</h4>
+        <p>Study how large language models interpret prompts and formulate web search queries. A direct window into LLM information-seeking behavior.</p>
+      </div>
+      <div class="usecase reveal">
+        <div class="usecase-emoji">🏢</div>
+        <h4>Agencies</h4>
+        <p>Run bulk prompt campaigns for multiple clients simultaneously. Export structured data for reporting, and maintain full session history per project.</p>
+      </div>
+      <div class="usecase reveal">
+        <div class="usecase-emoji">💡</div>
+        <h4>Product Teams</h4>
+        <p>Map how users might phrase product queries in AI assistants. Align product naming, documentation, and SEO to AI-native language patterns.</p>
+      </div>
+      <div class="usecase reveal">
+        <div class="usecase-emoji">⚗️</div>
+        <h4>Data Scientists</h4>
+        <p>Build training datasets, evaluate prompt sensitivity, and analyze query variance across different prompt formulations — all automatically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section style="background: var(--bg2);">
+  <div class="section-inner">
+    <div class="section-tag reveal">// Access</div>
+    <h2 class="reveal">Simple <span class="g">Pricing</span></h2>
+    <p class="section-desc reveal">Get started free. No credit card required.</p>
+    <div class="pricing-grid">
+      <div class="plan reveal">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">$0 <span>/ forever</span></div>
+        <ul class="plan-features">
+          <li>Up to 50 prompts per session</li>
+          <li>JSON & CSV export</li>
+          <li>Session history (5 entries)</li>
+          <li>Dark & light themes</li>
+          <li>Compact mode</li>
+        </ul>
+        <a href="login.html" class="plan-btn ghost">Add to Chrome</a>
+      </div>
+      <div class="plan featured reveal">
+        <div class="plan-badge">Popular</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">$9 <span>/ month</span></div>
+        <ul class="plan-features">
+          <li>Unlimited prompts per session</li>
+          <li>All export formats</li>
+          <li>Unlimited session history</li>
+          <li>Auto new chat (advanced mode)</li>
+          <li>Priority support</li>
+          <li>Early access to new features</li>
+        </ul>
+        <a href="https://chromewebstore.google.com/detail/chatgpt-query-extractor/cocgimelkbknadhaioallelibljhleek" target="_blank" class="plan-btn">Get Pro</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-inner">
+    <div class="section-tag reveal">// Questions</div>
+    <h2 class="reveal">FAQ</h2>
+    <div class="faq-list">
+      <div class="faq-item reveal" onclick="toggleFaq(this)">
+        <div class="faq-q">Does it work with any ChatGPT plan?<span class="faq-arrow">+</span></div>
+        <div class="faq-a">The extension works best with ChatGPT Plus or Team plans that have web browsing enabled. The query interception specifically captures the search queries generated when ChatGPT uses its web search tool. A free ChatGPT account with limited web access will produce fewer captured queries.</div>
+      </div>
+      <div class="faq-item reveal" onclick="toggleFaq(this)">
+        <div class="faq-q">Will it get my ChatGPT account banned?<span class="faq-arrow">+</span></div>
+        <div class="faq-a">The extension simulates normal user behavior and includes configurable delays between prompts. The recommended 30-second delay mimics human usage patterns. However, running extremely high volumes continuously is at your own risk. The auto new chat feature helps stay within OpenAI's per-session limits.</div>
+      </div>
+      <div class="faq-item reveal" onclick="toggleFaq(this)">
+        <div class="faq-q">Does it store or send my prompts anywhere?<span class="faq-arrow">+</span></div>
+        <div class="faq-a">No. All data stays local in your browser's storage. The extension communicates only with chatgpt.com — your prompts and extracted queries never leave your machine except to reach OpenAI's servers as they normally would in any ChatGPT session.</div>
+      </div>
+      <div class="faq-item reveal" onclick="toggleFaq(this)">
+        <div class="faq-q">How many prompts can I run in one session?<span class="faq-arrow">+</span></div>
+        <div class="faq-a">The free tier supports up to 50 prompts per session. The Pro tier has no hard limit. In practice, session length depends on your ChatGPT plan's rate limits and the delay setting. With a 30s delay, 100 prompts takes roughly 50 minutes.</div>
+      </div>
+      <div class="faq-item reveal" onclick="toggleFaq(this)">
+        <div class="faq-q">What browsers are supported?<span class="faq-arrow">+</span></div>
+        <div class="faq-a">Currently Chrome and all Chromium-based browsers (Edge, Brave, Arc, etc.) are fully supported via the Chrome Web Store. Firefox support is on the roadmap.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BOTTOM -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="section-inner cta-inner">
+    <div class="section-tag reveal" style="text-align:center">// Install</div>
+    <h2 class="reveal">Start Extracting<br><span class="g">Query Intelligence</span></h2>
+    <p class="section-desc reveal" style="margin: 20px auto 48px; text-align:center;">
+      Free to install. Works immediately.<br>No account, no data collection.
+    </p>
+    <div class="hero-actions reveal" style="justify-content: center;">
+      <a href="login.html" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+        Add to Chrome — Free
+      </a>
+      <a href="#features" class="btn-ghost">Explore Features</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">© 2025 GPT Query Extractor</div>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="blog.html">Blog</a>
+    <a href="contact.html">Contact</a>
+    <a href="faq.html">FAQ</a>
+  </div>
+  <div class="footer-copy">v5.6 · Made for searchers</div>
+</footer>
+
+<script>
+  // Custom Cursor
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX - 6 + 'px';
+    cursor.style.top = mouseY - 6 + 'px';
+  });
+
+  (function animateRing() {
+    ringX += (mouseX - ringX) * 0.15;
+    ringY += (mouseY - ringY) * 0.15;
+    cursorRing.style.left = ringX - 18 + 'px';
+    cursorRing.style.top = ringY - 18 + 'px';
+    requestAnimationFrame(animateRing);
+  })();
+
+  document.querySelectorAll('a, button, .faq-item').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursorRing.style.width = '52px'; cursorRing.style.height = '52px'; });
+    el.addEventListener('mouseleave', () => { cursorRing.style.width = '36px'; cursorRing.style.height = '36px'; });
+  });
+
+  // Scroll Reveal
+  new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 }).observe
+    ? document.querySelectorAll('.reveal').forEach(el =>
+        new IntersectionObserver(entries => {
+          entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.12 }).observe(el)
+      )
+    : document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+
+  // FAQ Toggle
+  function toggleFaq(el) {
+    const wasOpen = el.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
+    if (!wasOpen) el.classList.add('open');
+  }
+</script>
+
+<script src="api.js"></script>
+</body>
+</html>
