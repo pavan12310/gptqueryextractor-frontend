@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#00c27a"/>
+  <title>Blog — GPT Query Extractor</title>
+  <meta name="description" content="SEO tutorials, AI research insights, and strategies for extracting ChatGPT search queries. Learn how to use AI query data for topical authority and keyword research."/>
+  <link rel="canonical" href="https://gptqueryextractor.netlify.app/blog.html"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#050a08;--bg2:#0a1410;--bg3:#0f1e16;--green:#00c27a;--green-dim:rgba(0,194,122,0.1);--green-glow:rgba(0,194,122,0.35);--text:#e0ede7;--text2:#7aaa90;--text3:#3d6352;--mono:'Space Mono',monospace;--display:'Syne',sans-serif}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:var(--display);overflow-x:hidden;cursor:none}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:0.6}
+    .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,194,122,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,122,0.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+    .cursor{position:fixed;width:12px;height:12px;background:var(--green);border-radius:50%;pointer-events:none;z-index:99999;mix-blend-mode:screen}
+    .cursor-ring{position:fixed;width:36px;height:36px;border:1px solid var(--green);border-radius:50%;pointer-events:none;z-index:99998;opacity:0.5;transition:width .2s,height .2s}
+    nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:20px 48px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(24px);background:rgba(5,10,8,0.85);border-bottom:1px solid rgba(0,194,122,0.08)}
+    .nav-logo{font-family:var(--mono);font-size:13px;color:var(--green);letter-spacing:2px;text-transform:uppercase;text-decoration:none}
+    .nav-logo span{color:var(--text3)}
+    .nav-links{display:flex;gap:36px;list-style:none}
+    .nav-links a{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);text-decoration:none;font-family:var(--mono);transition:color 0.2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--green)}
+    .nav-cta{background:var(--green);color:#000;font-family:var(--mono);font-size:12px;padding:10px 22px;border-radius:4px;text-decoration:none;font-weight:700;transition:all 0.2s}
+    .nav-cta:hover{background:#fff}
+    .nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+    .nav-hamburger span{display:block;width:22px;height:2px;background:var(--green);border-radius:2px;transition:all .3s}
+    .nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .nav-hamburger.open span:nth-child(2){opacity:0}
+    .nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+    .nav-mobile{display:none;position:fixed;top:61px;left:0;right:0;background:rgba(5,10,8,0.97);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,194,122,0.12);padding:20px 24px;z-index:999;flex-direction:column;gap:0}
+    .nav-mobile.open{display:flex}
+    .nav-mobile a{font-family:var(--mono);font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);text-decoration:none;padding:16px 0;border-bottom:1px solid rgba(0,194,122,0.06);transition:color .2s}
+    .nav-mobile a:hover{color:var(--green)}
+    .nav-mobile a.mob-cta{color:var(--green);font-weight:700;border-bottom:none;margin-top:8px}
+
+    .page{max-width:1100px;margin:0 auto;padding:120px 48px 80px;position:relative;z-index:1}
+    .page-tag{font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:20px}
+    h1{font-size:clamp(40px,5vw,64px);font-weight:800;letter-spacing:-2px;margin-bottom:16px}
+    .accent{color:var(--green)}
+    .page-sub{font-family:var(--mono);font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:16px}
+
+    .filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:48px;margin-top:8px}
+    .filter-tag{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:7px 16px;border-radius:3px;border:1px solid rgba(0,194,122,0.15);color:var(--text3);cursor:pointer;transition:all 0.2s;background:none}
+    .filter-tag:hover,.filter-tag.active{background:var(--green-dim);color:var(--green);border-color:var(--green)}
+
+    /* Featured post */
+    .featured-post{background:var(--bg2);border:1px solid rgba(0,194,122,0.15);border-radius:10px;padding:48px;margin-bottom:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;transition:border-color 0.2s}
+    .featured-post:hover{border-color:rgba(0,194,122,0.4)}
+    .fp-tag{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--green);background:var(--green-dim);border:1px solid rgba(0,194,122,0.2);padding:4px 10px;border-radius:3px;display:inline-block;margin-bottom:20px}
+    .fp-title{font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:16px;line-height:1.15}
+    .fp-desc{font-family:var(--mono);font-size:12px;color:var(--text2);line-height:1.9;margin-bottom:24px}
+    .fp-meta{display:flex;align-items:center;gap:16px;font-family:var(--mono);font-size:10px;color:var(--text3)}
+    .fp-read{color:var(--green);font-weight:700}
+    .fp-visual{background:var(--bg3);border:1px solid rgba(0,194,122,0.08);border-radius:8px;height:220px;display:flex;align-items:center;justify-content:center;font-size:60px}
+
+    /* Post grid */
+    .posts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .post-card{background:var(--bg2);border:1px solid rgba(0,194,122,0.08);border-radius:8px;overflow:hidden;transition:all 0.2s;cursor:default}
+    .post-card:hover{border-color:rgba(0,194,122,0.3);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+    .post-thumb{height:140px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:40px;border-bottom:1px solid rgba(0,194,122,0.06)}
+    .post-body{padding:24px}
+    .post-tag{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:10px}
+    .post-title{font-size:17px;font-weight:700;letter-spacing:-0.3px;margin-bottom:10px;line-height:1.3}
+    .post-desc{font-family:var(--mono);font-size:11px;color:var(--text2);line-height:1.8;margin-bottom:16px}
+    .post-meta{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--text3)}
+
+    /* Full article overlay */
+    .article-overlay{display:none;position:fixed;inset:0;z-index:5000;background:rgba(5,10,8,0.98);overflow-y:auto;padding:40px 20px}
+    .article-overlay.open{display:block}
+    .article-inner{max-width:760px;margin:0 auto;padding-bottom:80px}
+    .article-back{font-family:var(--mono);font-size:11px;color:var(--green);cursor:pointer;letter-spacing:1px;text-transform:uppercase;margin-bottom:48px;display:inline-flex;align-items:center;gap:8px;border:none;background:none;transition:opacity .2s}
+    .article-back:hover{opacity:.7}
+    .article-tag{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--green);background:var(--green-dim);border:1px solid rgba(0,194,122,0.2);padding:4px 10px;border-radius:3px;display:inline-block;margin-bottom:24px}
+    .article-h1{font-size:clamp(32px,5vw,52px);font-weight:800;letter-spacing:-2px;line-height:1.05;margin-bottom:20px;color:var(--text)}
+    .article-meta{font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid rgba(0,194,122,0.1)}
+    .article-body h2{font-size:26px;font-weight:800;letter-spacing:-1px;margin:48px 0 16px;color:var(--text)}
+    .article-body h3{font-size:18px;font-weight:700;margin:32px 0 12px;color:var(--green)}
+    .article-body p{font-family:var(--mono);font-size:13px;color:var(--text2);line-height:2;margin-bottom:20px}
+    .article-body ul,.article-body ol{font-family:var(--mono);font-size:12px;color:var(--text2);line-height:2;margin-bottom:20px;padding-left:24px}
+    .article-body li{margin-bottom:6px}
+    .article-body strong{color:var(--text);font-weight:700}
+    .article-body code{font-family:var(--mono);font-size:11px;background:var(--bg2);border:1px solid rgba(0,194,122,0.15);padding:2px 8px;border-radius:3px;color:var(--green)}
+    .article-body .callout{background:var(--bg2);border-left:3px solid var(--green);padding:20px 24px;border-radius:0 8px 8px 0;margin:28px 0}
+    .article-body .callout p{margin-bottom:0}
+    .article-cta{margin-top:60px;padding:40px;background:var(--bg2);border:1px solid rgba(0,194,122,0.2);border-radius:10px;text-align:center}
+    .article-cta h3{font-size:24px;font-weight:800;margin-bottom:12px}
+    .article-cta p{font-family:var(--mono);font-size:12px;color:var(--text2);margin-bottom:24px}
+    .btn-green{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#000;font-family:var(--mono);font-size:12px;font-weight:700;padding:14px 28px;border-radius:4px;text-decoration:none;transition:all .2s}
+    .btn-green:hover{background:#fff;transform:translateY(-2px)}
+
+    footer{border-top:1px solid rgba(0,194,122,0.06);padding:32px 48px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;margin-top:80px}
+    .footer-logo{font-family:var(--mono);font-size:12px;color:var(--text3)}
+    .footer-links{display:flex;gap:24px;flex-wrap:wrap}
+    .footer-links a{font-family:var(--mono);font-size:11px;color:var(--text3);text-decoration:none;transition:color 0.2s}
+    .footer-links a:hover{color:var(--green)}
+    .footer-copy{font-family:var(--mono);font-size:11px;color:var(--text3)}
+    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--text3);border-radius:2px}
+
+    @media(max-width:900px){
+      nav{padding:16px 20px}.nav-links{display:none}.nav-hamburger{display:flex}
+      .page{padding:100px 20px 60px}
+      .featured-post{grid-template-columns:1fr}.fp-visual{display:none}
+      .posts-grid{grid-template-columns:1fr}
+      footer{flex-direction:column;gap:16px;text-align:center}.footer-links{justify-content:center}
+    }
+  </style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="grid-bg"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">GPT<span>/</span>Query<span>/</span>Extractor</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#pricing">Pricing</a></li>
+    <li><a href="blog.html" class="active">Blog</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+  <a href="https://chromewebstore.google.com/detail/chatgpt-query-extractor/cocgimelkbknadhaioallelibljhleek" target="_blank" class="nav-cta">Add to Chrome</a>
+</nav>
+<div class="nav-mobile" id="navMobile">
+  <a href="index.html">Home</a>
+  <a href="index.html#pricing">Pricing</a>
+  <a href="blog.html">Blog</a>
+  <a href="contact.html">Contact</a>
+  <a href="login.html">Login</a>
+  <a href="https://chromewebstore.google.com/detail/chatgpt-query-extractor/cocgimelkbknadhaioallelibljhleek" target="_blank" class="mob-cta">→ Add to Chrome — Free</a>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ARTICLE OVERLAYS (full content)
+═══════════════════════════════════════ -->
+
+<!-- Article 1 -->
+<div class="article-overlay" id="art1">
+<div class="article-inner">
+  <button class="article-back" onclick="closeArticle('art1')">← Back to Blog</button>
+  <div class="article-tag">⭐ Featured · Tutorial</div>
+  <h1 class="article-h1">How to Extract 500+ Search Queries from ChatGPT in One Session</h1>
+  <div class="article-meta">Feb 20, 2026 · 8 min read · By GPT Query Extractor Team</div>
+  <div class="article-body">
+    <p>If you've ever wondered what ChatGPT is actually searching for when it browses the web for your prompts, you're not alone. Every time ChatGPT uses its web search tool, it fires off one or more internal search queries to gather real-time information. These queries reveal exactly how the model interprets your prompt semantically — and for SEO professionals, that's gold.</p>
+    <p>In this guide, we'll walk through how to run a bulk prompt session with GPT Query Extractor and capture hundreds of these hidden queries in a single automated run.</p>
+
+    <h2>What Are ChatGPT's Internal Search Queries?</h2>
+    <p>When you ask ChatGPT a question that requires current information, the model doesn't just generate text from its training data — it formulates search queries and sends them to a web search API. These queries are different from your original prompt. They're shorter, more precise, and reflect how a search engine would process the underlying information need.</p>
+    <p>For example, if you prompt ChatGPT with <strong>"Write a blog post about the best content marketing strategies for B2B SaaS companies in 2026"</strong>, it might generate queries like:</p>
+    <ul>
+      <li><code>B2B SaaS content marketing strategies 2026</code></li>
+      <li><code>content marketing ROI B2B software companies</code></li>
+      <li><code>SaaS blog SEO best practices</code></li>
+      <li><code>thought leadership content B2B marketing</code></li>
+    </ul>
+    <p>Each of these is a keyword you could target. Now imagine running 100 prompts like this overnight. That's potentially 400–600 highly relevant, AI-validated keywords extracted automatically.</p>
+
+    <h2>Step 1: Install GPT Query Extractor</h2>
+    <p>First, install the extension from the Chrome Web Store. It works on Chrome, Edge, Brave, and Arc — any Chromium-based browser. After installation, you'll see the extension icon in your toolbar. Make sure you're logged into ChatGPT with a Plus or Team plan for maximum query generation.</p>
+    <div class="callout"><p><strong>Pro tip:</strong> ChatGPT free accounts have limited web search access. For consistent query extraction, a ChatGPT Plus plan is strongly recommended.</p></div>
+
+    <h2>Step 2: Prepare Your Prompt File</h2>
+    <p>Create a plain text file (.txt) with one prompt per line. The quality of your extracted queries depends heavily on how you write your prompts. Prompts that work best for query extraction:</p>
+    <ul>
+      <li>Start with <strong>"Research the latest..."</strong> — forces ChatGPT to search</li>
+      <li>Include a year or time reference — triggers real-time search</li>
+      <li>Ask for comparisons — generates multiple query angles</li>
+      <li>Reference industry terms or niches — yields long-tail queries</li>
+    </ul>
+    <p>A good batch might look like: 50 prompts around a core topic with variations in angle, audience, and intent. This gives you broad coverage of the semantic space around your keyword.</p>
+
+    <h2>Step 3: Configure the Extension</h2>
+    <p>Open the extension popup and upload your .txt file. Set the delay between prompts — we recommend 30 seconds as a safe starting point. For smaller batches (under 50), 20 seconds works fine. Enable "Auto New Chat" to automatically start fresh conversations every 20 prompts.</p>
+
+    <h2>Step 4: Run the Session and Export</h2>
+    <p>Click "Start" and let the extension run. You can leave it in the background — it doesn't require your active attention. When complete, you'll see all extracted queries organized by prompt. Export as CSV for spreadsheet analysis or JSON for programmatic processing.</p>
+
+    <h2>Analyzing Your Extracted Queries</h2>
+    <p>Once exported, import your CSV into Google Sheets or Ahrefs. Common analysis steps:</p>
+    <ol>
+      <li>Remove duplicates — ChatGPT often generates similar queries across prompts</li>
+      <li>Cluster by topic using a pivot table on the first two words</li>
+      <li>Cross-reference with your keyword tool for volume and difficulty</li>
+      <li>Identify high-intent queries (include "best", "vs", "how to", "review")</li>
+      <li>Build content briefs around query clusters, not individual keywords</li>
+    </ol>
+    <p>With 500+ queries extracted, you'll have enough material to plan a full content calendar for months — all validated by the world's most advanced language model.</p>
+
+    <div class="article-cta">
+      <h3>Ready to extract your first 500 queries?</h3>
+      <p>Install GPT Query Extractor free. No credit card required.</p>
+      <a href="https://chromewebstore.google.com/detail/chatgpt-query-extractor/cocgimelkbknadhaioallelibljhleek" target="_blank" class="btn-green">Add to Chrome — Free</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Article 2 -->
+<div class="article-overlay" id="art2">
+<div class="article-inner">
+  <button class="article-back" onclick="closeArticle('art2')">← Back to Blog</button>
+  <div class="article-tag">SEO</div>
+  <h1 class="article-h1">Using AI Query Data to Build Topical Authority in 2026</h1>
+  <div class="article-meta">Feb 18, 2026 · 6 min read · By GPT Query Extractor Team</div>
+  <div class="article-body">
+    <p>Topical authority — the idea that Google rewards sites that comprehensively cover a subject — has become one of the most important concepts in modern SEO. But mapping the full semantic landscape of a topic manually is time-consuming and incomplete. AI query extraction changes that entirely.</p>
+
+    <h2>Why Topical Authority Matters More Than Ever</h2>
+    <p>Google's Helpful Content updates have shifted ranking power away from individual keyword-optimised pages toward sites that demonstrate genuine expertise across a topic. To build topical authority, you need to cover every angle, subtopic, question, and related entity in your niche. The challenge is knowing what those angles are.</p>
+    <p>Traditional keyword research gives you search volume data but struggles to surface semantic relationships — the implicit connections between topics that Google uses to assess expertise. This is exactly where AI query extraction excels.</p>
+
+    <h2>How ChatGPT Query Data Maps Your Topic Space</h2>
+    <p>When you send ChatGPT a batch of prompts around a core topic, the internal queries it generates reveal the semantic neighbourhood of that topic. These are the related concepts, questions, and angles that the world's most sophisticated language model associates with your subject.</p>
+    <p>Think of it as a crowd-sourced, AI-validated map of your content gap. Every unique query you extract is a potential piece of content you could create.</p>
+
+    <h2>A Practical Topical Authority Workflow</h2>
+    <h3>Step 1: Define Your Pillar Topic</h3>
+    <p>Choose a broad topic you want to rank for. For example: "email marketing for e-commerce". This becomes the centre of your topical map.</p>
+    <h3>Step 2: Generate 50–100 Prompt Variations</h3>
+    <p>Write prompts that approach your topic from every angle: audience segments, use cases, questions, comparisons, common problems. Run these through GPT Query Extractor overnight.</p>
+    <h3>Step 3: Cluster the Extracted Queries</h3>
+    <p>Import your CSV into a spreadsheet and cluster queries by semantic similarity. You'll naturally find 6–12 subtopic clusters emerging — these become your content pillars.</p>
+    <h3>Step 4: Map Clusters to Content Types</h3>
+    <p>For each cluster, determine the ideal content type: long-form guide, comparison post, FAQ page, or case study. Assign target URLs and internal linking structure before writing a single word.</p>
+    <h3>Step 5: Publish and Link Systematically</h3>
+    <p>Publish supporting content first, then your pillar page last. Build internal links from every supporting piece to the pillar, and from the pillar to all supporting pages. This hub-and-spoke structure signals comprehensive topic coverage to Google.</p>
+
+    <h2>Real Results: What to Expect</h2>
+    <p>Agencies using this workflow report seeing measurable ranking improvements within 60–90 days of publishing a complete topical cluster. The key is comprehensiveness — a cluster of 12–20 tightly interlinked pieces consistently outperforms a single highly-optimised page targeting the same core keyword.</p>
+    <div class="callout"><p><strong>Key insight:</strong> The queries ChatGPT generates aren't just keywords — they're signals about how AI systems interpret your topic. As AI-driven search (like Google's AI Overviews) becomes dominant, aligning your content with AI's semantic understanding is increasingly important.</p></div>
+
+    <div class="article-cta">
+      <h3>Start mapping your topical authority today</h3>
+      <p>Extract 500+ semantically-relevant queries in your first session.</p>
+      <a href="https://chromewebstore.google.com/detail/chatgpt-query-extractor/cocgimelkbknadhaioallelibljhleek" target="_blank" class="btn-green">Add to Chrome — Free</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Article 3 -->
+<div class="article-overlay" id="art3">
+<div class="article-inner">
+  <button class="article-back" onclick="closeArticle('art3')">← Back to Blog</button>
+  <div class="article-tag">Research</div>
+  <h1 class="article-h1">Inside ChatGPT's Search Behavior: What 10,000 Queries Tell Us</h1>
+  <div class="article-meta">Feb 14, 2026 · 10 min read · By GPT Query Extractor Team</div>
+  <div class="article-body">
+    <p>After analyzing over 10,000 extracted queries from GPT Query Extractor sessions across dozens of industries, we've identified clear patterns in how ChatGPT formulates its internal searches. These patterns have direct implications for how you write prompts, structure content, and think about AI-era SEO.</p>
+
+    <h2>Finding 1: ChatGPT Searches Are 3–7 Words on Average</h2>
+    <p>Unlike conversational Google searches which have grown longer over time, ChatGPT's internal queries tend to be highly compressed. The median length is 4.2 words. This reflects the model's tendency to distil complex prompts into their most searchable essence — similar to how an expert librarian would reformulate a patron's question into a catalog query.</p>
+    <p><strong>SEO implication:</strong> Your content should target these compressed, high-intent phrases alongside longer conversational queries. The 3–5 word range is where AI and traditional search overlap most significantly.</p>
+
+    <h2>Finding 2: Queries Cluster Around 4 Intent Types</h2>
+    <p>Across all topics analysed, extracted queries fell into four consistent intent categories:</p>
+    <ul>
+      <li><strong>Informational (46%):</strong> "what is", "how does", "definition of", "explained"</li>
+      <li><strong>Comparative (28%):</strong> "vs", "comparison", "difference between", "alternatives to"</li>
+      <li><strong>Navigational (14%):</strong> Brand names, specific product names, official sources</li>
+      <li><strong>Commercial (12%):</strong> "best", "top", "review", "pricing", "cost"</li>
+    </ul>
+    <p>This distribution closely mirrors traditional search intent distribution but with a notably higher proportion of comparative queries — likely because ChatGPT is often used to synthesise information across multiple sources.</p>
+
+    <h2>Finding 3: Prompt Framing Dramatically Affects Query Type</h2>
+    <p>The single biggest variable in what queries ChatGPT generates is how you frame your prompt. We tested the same core topic across six framing styles:</p>
+    <ul>
+      <li>Prompts starting with "Write a blog post about..." → mostly informational queries</li>
+      <li>Prompts starting with "Compare..." → 3x more comparative queries</li>
+      <li>Prompts starting with "What are the latest..." → 2x more recent/time-qualified queries</li>
+      <li>Prompts starting with "Which is better..." → highest proportion of commercial queries</li>
+    </ul>
+    <div class="callout"><p><strong>Actionable takeaway:</strong> Use diverse prompt framing in your extraction sessions to get a balanced mix of query intent types. A session using only one framing style will miss entire categories of relevant keywords.</p></div>
+
+    <h2>Finding 4: Niche Depth Correlates With Query Quality</h2>
+    <p>Shallow, generic prompts produce generic queries. The more specific and niche your prompts, the more unique and actionable the extracted queries become. Prompts that include industry jargon, specific audience segments, or named products produced queries with 40% less overlap with standard keyword tool suggestions — meaning they surface genuinely underserved content opportunities.</p>
+
+    <h2>Finding 5: Query Diversity Peaks at Prompt Batch Size 40–60</h2>
+    <p>There's a point of diminishing returns in query extraction. After analysing batch size vs. unique query count, we found that batches of 40–60 prompts around a single topic produce the highest ratio of unique-to-duplicate queries. Above 80 prompts on the same narrow topic, you start getting significant repetition. For broad topics, larger batches (100+) remain productive.</p>
+
+    <div class="article-cta">
+      <h3>See the patterns for yourself</h3>
+      <p>Run your first extraction session and analyze the query patterns in your niche.</p>
+      <a href="https://chromewebstore.google.com/detail/chatgpt-query-extractor/cocgimelkbknadhaioallelibljhleek" target="_blank" class="btn-green">Add to Chrome — Free</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Article 4 -->
+<div class="article-overlay" id="art4">
+<div class="article-inner">
+  <button class="article-back" onclick="closeArticle('art4')">← Back to Blog</button>
+  <div class="article-tag">Update</div>
+  <h1 class="article-h1">v5.6 Released: Auto New Chat, Session History & Better Export</h1>
+  <div class="article-meta">Feb 10, 2026 · 3 min read · By GPT Query Extractor Team</div>
+  <div class="article-body">
+    <p>Version 5.6 is our most significant update yet. After hundreds of user interviews and feedback sessions, we've addressed the three most-requested features: automatic chat rotation, expanded session history, and plain text export. Here's everything that's new.</p>
+
+    <h2>Auto New Chat</h2>
+    <p>The single most impactful new feature. Previously, running large prompt batches in a single ChatGPT conversation caused two problems: context contamination (earlier responses influencing later ones) and hitting per-conversation rate limits.</p>
+    <p>Auto New Chat solves both. The extension now automatically opens a fresh ChatGPT conversation every 20 prompts (configurable from 10 to 50). Your session continues seamlessly — queries from all conversations are merged into one unified export.</p>
+    <p><strong>What this means practically:</strong> You can now run batches of 200, 300, or even 500 prompts continuously without manual intervention. Each set of 20 prompts gets a clean context window and fresh rate limit budget.</p>
+
+    <h2>Expanded Session History</h2>
+    <p>Free plan users can now store 5 sessions (up from 3). Pro plan users have unlimited history. Every saved session includes:</p>
+    <ul>
+      <li>Timestamp and session name</li>
+      <li>Prompt count and total query count</li>
+      <li>Full prompt-to-query mapping</li>
+      <li>One-click re-export in any format</li>
+    </ul>
+    <p>Sessions are stored locally in your browser — nothing is sent to our servers.</p>
+
+    <h2>Plain Text Export</h2>
+    <p>The new plain text export format outputs one query per line with no additional formatting. This is ideal for:</p>
+    <ul>
+      <li>Pasting directly into Ahrefs or Semrush keyword analysis</li>
+      <li>Importing into content planning tools</li>
+      <li>Quick copy-paste workflows</li>
+    </ul>
+
+    <h2>Other Improvements in v5.6</h2>
+    <ul>
+      <li>40% faster query detection — reduced false negatives on complex prompts</li>
+      <li>Better handling of ChatGPT's o1 and o3 models</li>
+      <li>Fixed an edge case where queries from image-generation prompts were incorrectly captured</li>
+      <li>Compact mode now persists across browser sessions</li>
+    </ul>
+
+    <div class="article-cta">
+      <h3>Already installed? Update now.</h3>
+      <p>v5.6 updates automatically from the Chrome Web Store. Or install fresh for the first time.</p>
+      <a href="https://chromewebstore.google.com/detail/chatgpt-query-extractor/cocgimelkbknadhaioallelibljhleek" target="_blank" class="btn-green">View on Chrome Web Store</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Article 5 -->
+<div class="article-overlay" id="art5">
+<div class="article-inner">
+  <button class="article-back" onclick="closeArticle('art5')">← Back to Blog</button>
+  <div class="article-tag">Tutorial</div>
+  <h1 class="article-h1">Prompt Engineering for Better Query Extraction: What Works</h1>
+  <div class="article-meta">Jan 28, 2026 · 5 min read · By GPT Query Extractor Team</div>
+  <div class="article-body">
+    <p>How you phrase your prompts has a bigger impact on extracted query quality than any other variable. After testing thousands of prompt variations, we've identified clear patterns in what generates rich, diverse, actionable queries versus what produces shallow or redundant results.</p>
+
+    <h2>The Golden Rule: Force Web Search</h2>
+    <p>ChatGPT only generates internal search queries when it needs to look up current information. If your prompt can be answered entirely from training data (general explanations, creative tasks, basic definitions), it won't trigger a web search — and you'll extract nothing.</p>
+    <p><strong>Always include a signal that forces current information lookup:</strong></p>
+    <ul>
+      <li>Include a year: "in 2026", "this year", "recent"</li>
+      <li>Ask for current stats: "latest data", "current market size"</li>
+      <li>Reference evolving topics: "trends", "news", "updates"</li>
+      <li>Ask for specific examples: "real companies that", "case studies of"</li>
+    </ul>
+
+    <h2>Prompt Templates That Consistently Work</h2>
+    <h3>Template 1: The Research Brief</h3>
+    <p><code>Research the latest [topic] trends in [industry] for [year]. Include statistics, key players, and emerging challenges.</code></p>
+    <p>Why it works: Forces multiple searches across different angles of the topic.</p>
+    <h3>Template 2: The Comparison Request</h3>
+    <p><code>Compare the top 5 [tools/strategies/approaches] for [use case] in [year]. Include pricing, pros, cons, and who each is best for.</code></p>
+    <p>Why it works: Comparison prompts generate queries for each individual option plus meta-comparison queries.</p>
+    <h3>Template 3: The Expert Interview</h3>
+    <p><code>What are [industry experts / leading [professionals]] saying about [topic] in [year]? What's the current consensus?</code></p>
+    <p>Why it works: Triggers searches for opinions, publications, and expert sources — excellent for finding thought leadership content angles.</p>
+    <h3>Template 4: The Problem-Solution</h3>
+    <p><code>What are the most common challenges with [topic] and how are companies solving them in [year]?</code></p>
+    <p>Why it works: Generates queries around pain points, which are high-intent commercial keywords.</p>
+
+    <h2>What to Avoid</h2>
+    <ul>
+      <li><strong>Pure creative prompts</strong> ("Write a poem about...") — no web search triggered</li>
+      <li><strong>Basic definitions</strong> ("Explain what X is") — answered from training data</li>
+      <li><strong>Historical events</strong> without a current angle — rarely triggers search</li>
+      <li><strong>Very broad, vague prompts</strong> — produces generic queries with no differentiation</li>
+    </ul>
+
+    <h2>The 3:1 Ratio for Prompt Variety</h2>
+    <p>For the best query diversity, use a 3:1 ratio: three informational/research prompts for every one comparative or commercial prompt. This matches the natural distribution of search intent and ensures you capture the full keyword landscape around your topic.</p>
+
+    <div class="article-cta">
+      <h3>Put these templates to work</h3>
+      <p>Copy these prompt templates into a .txt file and run your first extraction session.</p>
+      <a href="https://chromewebstore.google.com/detail/chatgpt-query-extractor/cocgimelkbknadhaioallelibljhleek" target="_blank" class="btn-green">Add to Chrome — Free</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Article 6 -->
+<div class="article-overlay" id="art6">
+<div class="article-inner">
+  <button class="article-back" onclick="closeArticle('art6')">← Back to Blog</button>
+  <div class="article-tag">SEO · Workflow</div>
+  <h1 class="article-h1">From Query Data to Content Brief: A Complete Workflow</h1>
+  <div class="article-meta">Jan 22, 2026 · 9 min read · By GPT Query Extractor Team</div>
+  <div class="article-body">
+    <p>Extracting queries is only half the job. The real value comes from turning that raw query data into structured, actionable content briefs that your writers can execute on. This is the exact workflow our team uses — and that dozens of agencies have adopted for client projects.</p>
+
+    <h2>Phase 1: Query Harvesting (Day 1)</h2>
+    <p>Run your extraction session with 50–80 prompts around your target topic. Export as CSV. At this stage, don't filter anything — capture everything, including queries that seem irrelevant. Unexpected angles are often the most valuable.</p>
+    <p>Expected output: 200–400 raw queries, some duplicates, some noise.</p>
+
+    <h2>Phase 2: Cleaning and Deduplication (30 minutes)</h2>
+    <p>Open your CSV in Google Sheets. Create a helper column with <code>=LOWER(TRIM(A2))</code> and sort. Remove:</p>
+    <ul>
+      <li>Exact duplicates</li>
+      <li>Queries shorter than 3 words (usually too generic)</li>
+      <li>Navigational queries (brand names you don't target)</li>
+      <li>Queries clearly outside your topic scope</li>
+    </ul>
+    <p>You should be left with 150–300 quality queries.</p>
+
+    <h2>Phase 3: Semantic Clustering (1–2 hours)</h2>
+    <p>This is the most important step. Group queries by semantic similarity into 6–15 clusters. You can do this manually in Sheets using colour coding, or use a free tool like keyword-cluster.com.</p>
+    <p>Each cluster should have:</p>
+    <ul>
+      <li>A clear central theme (3–5 words)</li>
+      <li>10–30 supporting queries</li>
+      <li>A primary intent (informational, commercial, comparative)</li>
+    </ul>
+
+    <h2>Phase 4: Prioritization Matrix</h2>
+    <p>Score each cluster on three dimensions (1–5 scale):</p>
+    <ul>
+      <li><strong>Business relevance</strong> — how close is this to your product/service?</li>
+      <li><strong>Content gap</strong> — do you have existing content here?</li>
+      <li><strong>Query volume signal</strong> — how many queries in this cluster?</li>
+    </ul>
+    <p>Total score = your production priority. Build a Gantt chart of content production ordered by score.</p>
+
+    <h2>Phase 5: Brief Construction</h2>
+    <p>For each high-priority cluster, create a brief containing:</p>
+    <ul>
+      <li><strong>Target URL and title</strong></li>
+      <li><strong>Primary keyword</strong> (the cluster centroid)</li>
+      <li><strong>Secondary keywords</strong> (top 10 queries from the cluster)</li>
+      <li><strong>Search intent</strong> (what is the reader trying to accomplish?)</li>
+      <li><strong>Recommended format</strong> (guide, list, comparison, FAQ)</li>
+      <li><strong>Required sections</strong> (H2/H3 outline derived from query patterns)</li>
+      <li><strong>Internal linking targets</strong> (related existing content to link from/to)</li>
+      <li><strong>Word count target</strong> (based on SERP analysis)</li>
+    </ul>
+    <div class="callout"><p><strong>The section outline is the most valuable part.</strong> Queries naturally become H2/H3 headings. "How to choose X", "X vs Y", "Best X for Z" — these query patterns map directly to content sections. Your extracted queries have literally written your content outline for you.</p></div>
+
+    <h2>Phase 6: Publishing Sequence</h2>
+    <p>Don't publish all content simultaneously. Publish supporting posts first (cluster detail pages), then the pillar page last. This allows you to build internal links from supporting pages to the pillar at publication time — maximising the topical authority signal from day one.</p>
+
+    <div class="article-cta">
+      <h3>Get the raw material for your content engine</h3>
+      <p>Start extracting query clusters in your niche today — free to install.</p>
+      <a href="https://chromewebstore.google.com/detail/chatgpt-query-extractor/cocgimelkbknadhaioallelibljhleek" target="_blank" class="btn-green">Add to Chrome — Free</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     BLOG LISTING PAGE
+═══════════════════════════════════════ -->
+<div class="page">
+  <div class="page-tag">// Knowledge Base</div>
+  <h1>The <span class="accent">Query</span> Blog</h1>
+  <p class="page-sub">Real SEO tutorials, AI research, and strategies for extracting intelligence from ChatGPT's search behavior.</p>
+
+  <div class="filter-row">
+    <button class="filter-tag active" data-filter="all">All</button>
+    <button class="filter-tag" data-filter="tutorial">Tutorials</button>
+    <button class="filter-tag" data-filter="seo">SEO</button>
+    <button class="filter-tag" data-filter="research">Research</button>
+    <button class="filter-tag" data-filter="update">Updates</button>
+  </div>
+
+  <!-- Featured -->
+  <div class="featured-post" onclick="openArticle('art1')" data-category="tutorial">
+    <div>
+      <div class="fp-tag">⭐ Featured · Tutorial</div>
+      <div class="fp-title">How to Extract 500+ Search Queries from ChatGPT in One Session</div>
+      <div class="fp-desc">A complete step-by-step walkthrough — from installing the extension to analyzing 500+ extracted queries. Includes prompt templates, export tips, and analysis techniques for SEO professionals.</div>
+      <div class="fp-meta">
+        <span>Feb 20, 2026</span><span>·</span><span>8 min read</span><span>·</span>
+        <span class="fp-read">Read article →</span>
+      </div>
+    </div>
+    <div class="fp-visual">🔍</div>
+  </div>
+
+  <!-- Posts grid -->
+  <div class="posts-grid">
+    <div class="post-card" onclick="openArticle('art2')" data-category="seo">
+      <div class="post-thumb">📊</div>
+      <div class="post-body">
+        <div class="post-tag">SEO</div>
+        <div class="post-title">Using AI Query Data to Build Topical Authority in 2026</div>
+        <div class="post-desc">How extracted ChatGPT queries map your entire topical cluster — and fill content gaps your competitors miss.</div>
+        <div class="post-meta"><span>Feb 18, 2026</span><span class="fp-read" style="color:var(--green);font-size:10px">6 min →</span></div>
+      </div>
+    </div>
+    <div class="post-card" onclick="openArticle('art3')" data-category="research">
+      <div class="post-thumb">🤖</div>
+      <div class="post-body">
+        <div class="post-tag">Research</div>
+        <div class="post-title">Inside ChatGPT's Search Behavior: What 10,000 Queries Tell Us</div>
+        <div class="post-desc">We analyzed 10,000+ extracted queries across dozens of industries. Here's what we found about patterns, intent distribution, and prompt sensitivity.</div>
+        <div class="post-meta"><span>Feb 14, 2026</span><span style="color:var(--green);font-size:10px">10 min →</span></div>
+      </div>
+    </div>
+    <div class="post-card" onclick="openArticle('art4')" data-category="update">
+      <div class="post-thumb">⚡</div>
+      <div class="post-body">
+        <div class="post-tag">Update</div>
+        <div class="post-title">v5.6 Released: Auto New Chat, History & Better Export</div>
+        <div class="post-desc">What's new in v5.6 — automatic chat rotation every 20 prompts, expanded session history, plain text export, and 40% faster query detection.</div>
+        <div class="post-meta"><span>Feb 10, 2026</span><span style="color:var(--green);font-size:10px">3 min →</span></div>
+      </div>
+    </div>
+    <div class="post-card" onclick="openArticle('art5')" data-category="tutorial">
+      <div class="post-thumb">🎯</div>
+      <div class="post-body">
+        <div class="post-tag">Tutorial</div>
+        <div class="post-title">Prompt Engineering for Better Query Extraction: What Works</div>
+        <div class="post-desc">Four proven prompt templates, what framing forces web search, and why 90% of bad extraction results come from how the prompt is written — not the tool.</div>
+        <div class="post-meta"><span>Jan 28, 2026</span><span style="color:var(--green);font-size:10px">5 min →</span></div>
+      </div>
+    </div>
+    <div class="post-card" onclick="openArticle('art6')" data-category="seo">
+      <div class="post-thumb">📈</div>
+      <div class="post-body">
+        <div class="post-tag">SEO · Workflow</div>
+        <div class="post-title">From Query Data to Content Brief: A Complete Workflow</div>
+        <div class="post-desc">The six-phase workflow — from raw query harvesting to finished content brief — used by agencies to build client content calendars from AI query data.</div>
+        <div class="post-meta"><span>Jan 22, 2026</span><span style="color:var(--green);font-size:10px">9 min →</span></div>
+      </div>
+    </div>
+    <div class="post-card" data-category="seo" style="cursor:default;opacity:.6">
+      <div class="post-thumb">🏢</div>
+      <div class="post-body">
+        <div class="post-tag">Case Study · Coming Soon</div>
+        <div class="post-title">How an SEO Agency Cut Keyword Research Time by 70%</div>
+        <div class="post-desc">Real results from an agency that integrated query extraction into their standard research workflow for every client project.</div>
+        <div class="post-meta"><span>Coming Feb 2026</span><span style="color:var(--text3);font-size:10px">7 min</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">© <span id="footerYear"></span> GPT Query Extractor</div>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a><a href="terms.html">Terms</a>
+    <a href="faq.html">FAQ</a><a href="contact.html">Contact</a>
+  </div>
+  <div class="footer-copy">v5.6 · Made for searchers</div>
+</footer>
+
+<script>
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+  // Cursor
+  const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx-6+'px';cursor.style.top=my-6+'px'});
+  (function ar(){rx+=(mx-rx)*.15;ry+=(my-ry)*.15;ring.style.left=rx-18+'px';ring.style.top=ry-18+'px';requestAnimationFrame(ar)})();
+
+  // Filter
+  document.querySelectorAll('.filter-tag').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.filter-tag').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const f=btn.dataset.filter;
+      document.querySelectorAll('.post-card,[class*="featured-post"]').forEach(card=>{
+        if(f==='all'||card.dataset.category===f) card.style.display='';
+        else card.style.display='none';
+      });
+    });
+  });
+
+  // Article open/close
+  function openArticle(id){
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closeArticle(id){
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow='';
+  }
+
+  // Mobile nav
+  const hb=document.getElementById('navHamburger'),mn=document.getElementById('navMobile');
+  hb.addEventListener('click',()=>{hb.classList.toggle('open');mn.classList.toggle('open')});
+</script>
+<script src="api.js"></script>
+</body>
+</html>

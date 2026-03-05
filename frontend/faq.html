@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" /><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FAQ — GPT Query Extractor</title>
+  <meta name="description" content="Frequently asked questions about GPT Query Extractor Chrome extension." />
+  <link rel="canonical" href="https://gptqueryextractor.netlify.app/faq.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#050a08;--bg2:#0a1410;--bg3:#0f1e16;--green:#00c27a;--green-dim:rgba(0,194,122,0.1);--green-glow:rgba(0,194,122,0.35);--text:#e0ede7;--text2:#7aaa90;--text3:#3d6352;--mono:'Space Mono',monospace;--display:'Syne',sans-serif}
+    body{background:var(--bg);color:var(--text);font-family:var(--display);overflow-x:hidden;cursor:none}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:0.6}
+    .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,194,122,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,122,0.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+    .cursor{position:fixed;width:12px;height:12px;background:var(--green);border-radius:50%;pointer-events:none;z-index:99999;mix-blend-mode:screen}
+    .cursor-ring{position:fixed;width:36px;height:36px;border:1px solid var(--green);border-radius:50%;pointer-events:none;z-index:99998;opacity:0.5}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 48px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(24px);background:rgba(5,10,8,0.85);border-bottom:1px solid rgba(0,194,122,0.08)}
+    .nav-logo{font-family:var(--mono);font-size:13px;color:var(--green);letter-spacing:2px;text-transform:uppercase;text-decoration:none}
+    .nav-logo span{color:var(--text3)}
+    .nav-links{display:flex;gap:36px;list-style:none}
+    .nav-links a{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);text-decoration:none;font-family:var(--mono);transition:color 0.2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--green)}
+    .nav-cta{background:var(--green);color:#000;font-family:var(--mono);font-size:12px;padding:10px 22px;border-radius:4px;text-decoration:none;font-weight:700;transition:all 0.2s}
+    .nav-cta:hover{background:#fff}
+
+    .page{max-width:860px;margin:0 auto;padding:120px 48px 80px;position:relative;z-index:1}
+    .page-tag{font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:20px}
+    h1{font-size:clamp(40px,5vw,64px);font-weight:800;letter-spacing:-2px;margin-bottom:16px}
+    .accent{color:var(--green)}
+    .page-sub{font-family:var(--mono);font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:60px}
+
+    /* Category */
+    .faq-category{margin-bottom:48px}
+    .cat-title{font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(0,194,122,0.15)}
+    .faq-item{border-bottom:1px solid rgba(0,194,122,0.07);cursor:pointer}
+    .faq-q{display:flex;justify-content:space-between;align-items:center;padding:22px 0;font-size:16px;font-weight:700;letter-spacing:-0.3px;gap:20px;user-select:none}
+    .faq-arrow{font-family:var(--mono);color:var(--green);font-size:20px;transition:transform 0.25s;flex-shrink:0}
+    .faq-item.open .faq-arrow{transform:rotate(45deg)}
+    .faq-a{font-family:var(--mono);font-size:12px;color:var(--text2);line-height:1.9;max-height:0;overflow:hidden;transition:max-height 0.35s ease,padding-bottom 0.2s}
+    .faq-item.open .faq-a{max-height:300px;padding-bottom:22px}
+    .faq-a a{color:var(--green)}
+
+    /* Still have questions */
+    .still-q{background:var(--bg2);border:1px solid rgba(0,194,122,0.15);border-radius:10px;padding:48px;text-align:center;margin-top:64px}
+    .still-q h2{font-size:28px;font-weight:800;letter-spacing:-0.5px;margin-bottom:12px}
+    .still-q p{font-family:var(--mono);font-size:12px;color:var(--text2);margin-bottom:28px;line-height:1.8}
+    .btn-contact{display:inline-block;background:var(--green);color:#000;font-family:var(--mono);font-size:12px;font-weight:700;padding:14px 28px;border-radius:4px;text-decoration:none;transition:all 0.2s}
+    .btn-contact:hover{background:#fff;box-shadow:0 8px 32px var(--green-glow)}
+
+    footer{border-top:1px solid rgba(0,194,122,0.06);padding:32px 48px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;margin-top:80px}
+    .footer-logo{font-family:var(--mono);font-size:12px;color:var(--text3)}
+    .footer-links{display:flex;gap:24px}
+    .footer-links a{font-family:var(--mono);font-size:11px;color:var(--text3);text-decoration:none;transition:color 0.2s}
+    .footer-links a:hover{color:var(--green)}
+    .footer-copy{font-family:var(--mono);font-size:11px;color:var(--text3)}
+    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--text3);border-radius:2px}
+    @media(max-width:768px){nav{padding:16px 20px}.nav-links{display:none}.page{padding:100px 20px 60px}footer{flex-direction:column;gap:16px;text-align:center}}
+  </style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="grid-bg"></div>
+<nav>
+  <a href="index.html" class="nav-logo">GPT<span>/</span>Query<span>/</span>Extractor</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="login.html" class="nav-cta">Login</a>
+</nav>
+
+<div class="page">
+  <div class="page-tag">// Help Center</div>
+  <h1>Frequently <span class="accent">Asked</span></h1>
+  <p class="page-sub">Everything you need to know about GPT Query Extractor. Can't find your answer? <a href="contact.html" style="color:var(--green)">Contact us →</a></p>
+
+  <!-- Getting Started -->
+  <div class="faq-category">
+    <div class="cat-title">Getting Started</div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">How do I install GPT Query Extractor?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">Click "Add to Chrome" on the Chrome Web Store page. Once installed, the extension icon appears in your toolbar. Open ChatGPT.com, click the extension icon, and you're ready to go — no configuration needed.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What ChatGPT plan do I need?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">The extension works best with ChatGPT Plus or Team plans that have web browsing enabled. The query interception captures search queries generated when ChatGPT uses its web search tool. Free ChatGPT accounts with limited web access will produce fewer captured queries.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Which browsers are supported?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">Currently Chrome and all Chromium-based browsers (Edge, Brave, Arc, Opera) are fully supported. Firefox support is on the roadmap for a future release.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">How do I load my prompts?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">You can either paste prompts directly into the text area (one per line) or upload a .txt or .csv file using the upload zone. The extension supports hundreds of prompts per session.</div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="faq-category">
+    <div class="cat-title">Features & Usage</div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">How does query interception work?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">The extension injects a script that intercepts ChatGPT's internal network requests at the browser level. When ChatGPT uses its web search tool in response to your prompt, it generates search queries before hitting the web. The extension captures these queries before they're sent.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What is the delay setting for?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">The delay (15–90 seconds) controls how long the extension waits between sending prompts. It serves two purposes: giving ChatGPT enough time to generate and complete its response, and mimicking human-like usage to avoid triggering rate limits. We recommend 30 seconds as a safe default.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What does "Auto New Chat" do?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">Auto New Chat automatically starts a fresh ChatGPT conversation every 20 prompts. This prevents context from accumulating across prompts (which can affect query generation) and avoids hitting per-session rate limits on ChatGPT.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What export formats are available?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">Free plan: JSON and CSV. Pro plan: JSON, CSV, plain text (one query per line), and clipboard copy for any individual query. All formats include the original prompt associated with each set of queries.</div>
+    </div>
+  </div>
+
+  <!-- Privacy & Safety -->
+  <div class="faq-category">
+    <div class="cat-title">Privacy & Safety</div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Does the extension store or send my data anywhere?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">No. All data — your prompts, extracted queries, and session history — is stored locally in your browser's chrome.storage. Nothing is sent to our servers. The extension only communicates with chatgpt.com, exactly as a normal ChatGPT session would.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Will this get my ChatGPT account banned?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">The extension mimics normal user behavior with configurable delays. Using it responsibly (recommended 30s delay, reasonable session sizes) is very low risk. However, running extremely high volumes continuously could trigger OpenAI's automated systems. Use at your own discretion and review OpenAI's Terms of Service.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What permissions does the extension require?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">The extension requests: storage (to save session data locally), tabs (to open ChatGPT), notifications (optional, to alert when a session completes), and host access to chatgpt.com only. It does not request access to any other websites.</div>
+    </div>
+  </div>
+
+  <!-- Billing -->
+  <div class="faq-category">
+    <div class="cat-title">Billing & Plans</div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Is the free plan really free forever?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">Yes. The free Starter plan is genuinely free with no time limit. You get 50 prompts per session, JSON/CSV export, and 5 session history slots forever — no credit card required.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Can I cancel my Pro subscription anytime?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">Yes, you can cancel at any time. When you cancel, you keep Pro access until the end of your current billing period, then automatically downgrade to the free plan.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Do you offer refunds?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">We offer a 7-day money-back guarantee on Pro subscriptions. If you're not satisfied within 7 days of subscribing, contact us at <a href="mailto:hello@gptqueryextractor.com">hello@gptqueryextractor.com</a> for a full refund.</div>
+    </div>
+  </div>
+
+  <div class="still-q">
+    <h2>Still have <span class="accent">questions?</span></h2>
+    <p>Our team is happy to help. We respond within 24 hours on business days.</p>
+    <a href="contact.html" class="btn-contact">Contact Support →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">© <span id="footerYear"></span> GPT Query Extractor</div>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="blog.html">Blog</a><a href="contact.html">Contact</a>
+  </div>
+  <div class="footer-copy">v5.6 · Made for searchers</div>
+</footer>
+<script>
+  const cursor=document.getElementById('cursor'),cursorRing=document.getElementById('cursorRing');
+  let mouseX=0,mouseY=0,ringX=0,ringY=0;
+  document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;cursor.style.left=mouseX-6+'px';cursor.style.top=mouseY-6+'px';});
+  function animateRing(){ringX+=(mouseX-ringX)*0.15;ringY+=(mouseY-ringY)*0.15;cursorRing.style.left=ringX-18+'px';cursorRing.style.top=ringY-18+'px';requestAnimationFrame(animateRing);}
+  animateRing();
+  function toggleFaq(el){const wasOpen=el.classList.contains('open');document.querySelectorAll('.faq-item').forEach(f=>f.classList.remove('open'));if(!wasOpen)el.classList.add('open');}
+</script>
+<script>document.getElementById("footerYear").textContent=new Date().getFullYear();</script>
+<script src="api.js"></script>
+<script>var fy=document.getElementById("footerYear");if(fy)fy.textContent=new Date().getFullYear();</script>
+</body>
+</html>
