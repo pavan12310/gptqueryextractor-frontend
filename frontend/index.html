@@ -114,8 +114,6 @@
     h1 .dim { color: var(--text3); }
     .hero-desc { font-family: var(--mono); font-size: 14px; color: var(--text2); line-height: 1.9; max-width: 520px; margin-bottom: 24px; }
 
-    /* FIX #10: Chrome Web Store rating badge */
-    .hero-rating { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 36px; }
     .rating-stars { color: #f5a623; font-size: 16px; letter-spacing: 1px; }
     .rating-text { font-family: var(--mono); font-size: 11px; color: var(--text3); }
     .rating-text strong { color: var(--text2); }
@@ -287,7 +285,6 @@
   <ul class="nav-links">
     <li><a href="#how">How it Works</a></li>
     <li><a href="#features">Features</a></li>
-    <li><a href="#pricing">Pricing</a></li><!-- FIX #8: Added Pricing to nav -->
     <li><a href="blog.html">Blog</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
@@ -302,7 +299,6 @@
 <div class="nav-mobile" id="navMobile">
   <a href="#how" onclick="closeMobileNav()">How it Works</a>
   <a href="#features" onclick="closeMobileNav()">Features</a>
-  <a href="#pricing" onclick="closeMobileNav()">Pricing</a>
   <a href="blog.html">Blog</a>
   <a href="contact.html">Contact</a>
   <a href="login.html">Login / Sign Up</a>
@@ -579,8 +575,8 @@
         <div class="faq-a">The extension works best with ChatGPT Plus or Team plans that have web browsing enabled. The query interception specifically captures the search queries generated when ChatGPT uses its web search tool. A free ChatGPT account with limited web access will produce fewer captured queries.</div>
       </div>
       <div class="faq-item reveal" onclick="toggleFaq(this)">
-        <div class="faq-q">What's the difference between the Free and Pro plan?<span class="faq-arrow">+</span></div>
-        <div class="faq-a">The Free plan supports up to 50 prompts per session and 5 saved sessions. Pro removes all limits — unlimited prompts, unlimited session history, all export formats, and auto new chat mode. If you run prompt batches regularly or for client work, Pro pays for itself after a single research session.</div>
+        <div class="faq-q">Is the extension really completely free?<span class="faq-arrow">+</span></div>
+        <div class="faq-a">Yes — completely free. There is no paid plan. Install from the Chrome Web Store, no account or credit card required. All features including bulk prompts, all export formats, session history, auto new chat, and pause/resume control are available at no cost.</div>
       </div>
       <div class="faq-item reveal" onclick="toggleFaq(this)">
         <div class="faq-q">Will it get my ChatGPT account banned?<span class="faq-arrow">+</span></div>
