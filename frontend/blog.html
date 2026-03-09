@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#00c27a"/>
+  <title>Blog — GPT Query Extractor</title>
+  <meta name="description" content="SEO tutorials, AI research insights and strategies for extracting ChatGPT search queries."/>
+  <link rel="canonical" href="https://gptqueryextractor.netlify.app/blog"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#050a08;--bg2:#0a1410;--bg3:#0f1e16;--green:#00c27a;--green-dim:rgba(0,194,122,0.1);--green-glow:rgba(0,194,122,0.35);--text:#e0ede7;--text2:#7aaa90;--text3:#3d6352;--mono:'Space Mono',monospace;--display:'Syne',sans-serif}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:var(--display);overflow-x:hidden;cursor:none}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:0.6}
+    .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,194,122,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,122,0.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+    .cursor{position:fixed;width:12px;height:12px;background:var(--green);border-radius:50%;pointer-events:none;z-index:99999;mix-blend-mode:screen}
+    .cursor-ring{position:fixed;width:36px;height:36px;border:1px solid var(--green);border-radius:50%;pointer-events:none;z-index:99998;opacity:0.5}
+    nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:20px 48px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(24px);background:rgba(5,10,8,0.85);border-bottom:1px solid rgba(0,194,122,0.08)}
+    .nav-logo{font-family:var(--mono);font-size:13px;color:var(--green);letter-spacing:2px;text-transform:uppercase;text-decoration:none}
+    .nav-logo span{color:var(--text3)}
+    .nav-links{display:flex;gap:36px;list-style:none}
+    .nav-links a{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);text-decoration:none;font-family:var(--mono);transition:color .2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--green)}
+    .nav-cta{background:var(--green);color:#000;font-family:var(--mono);font-size:12px;padding:10px 22px;border-radius:4px;text-decoration:none;font-weight:700;transition:all .2s}
+    .nav-cta:hover{background:#fff}
+    .nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+    .nav-hamburger span{display:block;width:22px;height:2px;background:var(--green);border-radius:2px;transition:all .3s}
+    .nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .nav-hamburger.open span:nth-child(2){opacity:0}
+    .nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+    .nav-mobile{display:none;position:fixed;top:61px;left:0;right:0;background:rgba(5,10,8,0.97);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,194,122,0.12);padding:20px 24px;z-index:999;flex-direction:column}
+    .nav-mobile.open{display:flex}
+    .nav-mobile a{font-family:var(--mono);font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);text-decoration:none;padding:16px 0;border-bottom:1px solid rgba(0,194,122,0.06);transition:color .2s}
+    .nav-mobile a:hover{color:var(--green)}
+    .nav-mobile a.mob-cta{color:var(--green);font-weight:700;border-bottom:none;margin-top:8px}
+    .page{max-width:1100px;margin:0 auto;padding:120px 48px 80px;position:relative;z-index:1}
+    .page-tag{font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:20px}
+    h1{font-size:clamp(40px,5vw,64px);font-weight:800;letter-spacing:-2px;margin-bottom:16px}
+    .accent{color:var(--green)}
+    .page-sub{font-family:var(--mono);font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:16px}
+    .filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:48px;margin-top:8px}
+    .filter-tag{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:7px 16px;border-radius:3px;border:1px solid rgba(0,194,122,0.15);color:var(--text3);cursor:pointer;transition:all .2s;background:none}
+    .filter-tag:hover,.filter-tag.active{background:var(--green-dim);color:var(--green);border-color:var(--green)}
+    /* FEATURED */
+    .featured-post{background:var(--bg2);border:1px solid rgba(0,194,122,0.15);border-radius:10px;padding:48px;margin-bottom:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;transition:border-color .2s;text-decoration:none;color:inherit}
+    .featured-post:hover{border-color:rgba(0,194,122,0.4)}
+    .fp-tag{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--green);background:var(--green-dim);border:1px solid rgba(0,194,122,0.2);padding:4px 10px;border-radius:3px;display:inline-block;margin-bottom:20px}
+    .fp-title{font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:16px;line-height:1.15;color:var(--text)}
+    .fp-desc{font-family:var(--mono);font-size:12px;color:var(--text2);line-height:1.9;margin-bottom:24px}
+    .fp-meta{display:flex;align-items:center;gap:16px;font-family:var(--mono);font-size:10px;color:var(--text3)}
+    .fp-read{color:var(--green);font-weight:700}
+    .fp-visual{background:var(--bg3);border:1px solid rgba(0,194,122,0.08);border-radius:8px;height:220px;display:flex;align-items:center;justify-content:center;font-size:72px}
+    /* GRID */
+    .posts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .post-card{background:var(--bg2);border:1px solid rgba(0,194,122,0.08);border-radius:8px;overflow:hidden;transition:all .2s;text-decoration:none;color:inherit;display:block}
+    .post-card:hover{border-color:rgba(0,194,122,0.3);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+    .post-card.hidden{display:none}
+    .post-thumb{height:140px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:44px;border-bottom:1px solid rgba(0,194,122,0.06)}
+    .post-body{padding:24px}
+    .post-cat{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:10px}
+    .post-title{font-size:17px;font-weight:700;letter-spacing:-.3px;margin-bottom:10px;line-height:1.3;color:var(--text)}
+    .post-desc{font-family:var(--mono);font-size:11px;color:var(--text2);line-height:1.8;margin-bottom:16px}
+    .post-meta{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--text3)}
+    .post-read-link{color:var(--green)}
+    footer{border-top:1px solid rgba(0,194,122,0.06);padding:32px 48px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;margin-top:80px}
+    .footer-logo{font-family:var(--mono);font-size:12px;color:var(--text3)}
+    .footer-links{display:flex;gap:24px;flex-wrap:wrap}
+    .footer-links a{font-family:var(--mono);font-size:11px;color:var(--text3);text-decoration:none;transition:color .2s}
+    .footer-links a:hover{color:var(--green)}
+    .footer-copy{font-family:var(--mono);font-size:11px;color:var(--text3)}
+    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--text3);border-radius:2px}
+    @media(max-width:900px){
+      nav{padding:16px 20px}.nav-links{display:none}.nav-hamburger{display:flex}
+      .page{padding:100px 20px 60px}
+      .featured-post{grid-template-columns:1fr}.fp-visual{display:none}
+      .posts-grid{grid-template-columns:1fr}
+      footer{flex-direction:column;gap:16px;text-align:center}.footer-links{justify-content:center}
+    }
+  </style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="grid-bg"></div>
+<nav>
+  <a href="index.html" class="nav-logo">GPT<span>/</span>Query<span>/</span>Extractor</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="blog.html" class="active">Blog</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="login.html">Login</a></li>
+  </ul>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+  <a href="https://chromewebstore.google.com/detail/chatgpt-query-extractor/cocgimelkbknadhaioallelibljhleek" target="_blank" class="nav-cta">Add to Chrome</a>
+</nav>
+<div class="nav-mobile" id="navMobile">
+  <a href="index.html">Home</a>
+  <a href="blog.html">Blog</a>
+  <a href="contact.html">Contact</a>
+  <a href="login.html">Login</a>
+  <a href="https://chromewebstore.google.com/detail/chatgpt-query-extractor/cocgimelkbknadhaioallelibljhleek" target="_blank" class="mob-cta">→ Add to Chrome — Free</a>
+</div>
+
+<div class="page">
+  <div class="page-tag">// Knowledge Base</div>
+  <h1>The <span class="accent">Query</span> Blog</h1>
+  <p class="page-sub">SEO tutorials, AI research insights, and strategies for extracting intelligence from ChatGPT's search behaviour.</p>
+
+  <div class="filter-row">
+    <button class="filter-tag active" data-filter="all">All</button>
+    <button class="filter-tag" data-filter="Tutorial">Tutorials</button>
+    <button class="filter-tag" data-filter="SEO">SEO</button>
+    <button class="filter-tag" data-filter="Research">Research</button>
+    <button class="filter-tag" data-filter="Update">Updates</button>
+  </div>
+
+  <!-- FEATURED POST -->
+  <a class="featured-post" href="/blog/chatgpt-search-engine-guide" data-cat="SEO">
+    <div>
+      <div class="fp-tag">⭐ Featured · SEO</div>
+      <div class="fp-title">What Is ChatGPT Search & How Does It Work?</div>
+      <div class="fp-desc">Learn how the GPT search engine works, how it differs from Google, and why AI search is changing SEO forever.</div>
+      <div class="fp-meta">
+        <span>March 9, 2026</span><span>·</span><span>7 min read</span><span>·</span>
+        <span class="fp-read">Read article →</span>
+      </div>
+    </div>
+    <div class="fp-visual">🔎</div>
+  </a>
+
+  <!-- POST GRID -->
+  <!-- ══ TO ADD A NEW POST: copy one post-card block, update href/emoji/title/desc/date ══ -->
+  <div class="posts-grid" id="postsGrid">
+
+    <a class="post-card" data-cat="Tutorial" href="/blog/how-to-extract-chatgpt-queries">
+      <div class="post-thumb">🔍</div>
+      <div class="post-body">
+        <div class="post-cat">Tutorial</div>
+        <div class="post-title">How to Extract 500+ Search Queries from ChatGPT in One Session</div>
+        <div class="post-desc">Step-by-step guide including prompt templates, delay settings, and analysis tips.</div>
+        <div class="post-meta"><span>Mar 9, 2026</span><span class="post-read-link">Read →</span></div>
+      </div>
+    </a>
+
+    <a class="post-card" data-cat="SEO" href="/blog/using-ai-query-data-topical-authority">
+      <div class="post-thumb">📈</div>
+      <div class="post-body">
+        <div class="post-cat">SEO</div>
+        <div class="post-title">Using AI Query Data to Build Topical Authority in 2026</div>
+        <div class="post-desc">Map your entire topic landscape before writing a single word using AI-extracted query data.</div>
+        <div class="post-meta"><span>Mar 5, 2026</span><span class="post-read-link">Read →</span></div>
+      </div>
+    </a>
+
+    <a class="post-card" data-cat="Research" href="/blog/chatgpt-search-behavior-10000-queries">
+      <div class="post-thumb">🧪</div>
+      <div class="post-body">
+        <div class="post-cat">Research</div>
+        <div class="post-title">Inside ChatGPT's Search Behaviour: What 10,000 Queries Tell Us</div>
+        <div class="post-desc">Five actionable findings from analysing 10,000 extracted queries across dozens of topics.</div>
+        <div class="post-meta"><span>Feb 28, 2026</span><span class="post-read-link">Read →</span></div>
+      </div>
+    </a>
+
+    <a class="post-card" data-cat="Update" href="/blog/v5-6-release-auto-new-chat-session-history">
+      <div class="post-thumb">🚀</div>
+      <div class="post-body">
+        <div class="post-cat">Update</div>
+        <div class="post-title">v5.6 Released: Auto New Chat, Session History & Better Export</div>
+        <div class="post-desc">Auto new chat every 20 prompts, saved sessions, plain text export, and 40% faster detection.</div>
+        <div class="post-meta"><span>Feb 20, 2026</span><span class="post-read-link">Read →</span></div>
+      </div>
+    </a>
+
+    <a class="post-card" data-cat="Tutorial" href="/blog/prompt-engineering-for-query-extraction">
+      <div class="post-thumb">⚡</div>
+      <div class="post-body">
+        <div class="post-cat">Tutorial</div>
+        <div class="post-title">Prompt Engineering for Better Query Extraction: What Works</div>
+        <div class="post-desc">The four prompt templates that consistently produce the highest-quality search queries.</div>
+        <div class="post-meta"><span>Feb 14, 2026</span><span class="post-read-link">Read →</span></div>
+      </div>
+    </a>
+
+    <a class="post-card" data-cat="SEO" href="/blog/query-data-to-content-brief-workflow">
+      <div class="post-thumb">📋</div>
+      <div class="post-body">
+        <div class="post-cat">SEO</div>
+        <div class="post-title">From Query Data to Content Brief: A Complete Workflow</div>
+        <div class="post-desc">End-to-end system — from 300 raw queries to a publishable content brief in under two hours.</div>
+        <div class="post-meta"><span>Feb 7, 2026</span><span class="post-read-link">Read →</span></div>
+      </div>
+    </a>
+
+  </div>
+  <!-- ══ END POST GRID ══ -->
+</div>
+
+<footer>
+  <div class="footer-logo">© <span id="footerYear"></span> GPT Query Extractor</div>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="faq.html">FAQ</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="footer-copy">v5.6 · Made for searchers</div>
+</footer>
+
+<script>
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
+  const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx-6+'px';cursor.style.top=my-6+'px'});
+  (function ar(){rx+=(mx-rx)*.15;ry+=(my-ry)*.15;ring.style.left=rx-18+'px';ring.style.top=ry-18+'px';requestAnimationFrame(ar)})();
+  const hb=document.getElementById('navHamburger'),mn=document.getElementById('navMobile');
+  hb.addEventListener('click',()=>{hb.classList.toggle('open');mn.classList.toggle('open')});
+  // Category filter
+  document.querySelectorAll('.filter-tag').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.filter-tag').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const f=btn.dataset.filter;
+      document.querySelectorAll('#postsGrid .post-card').forEach(c=>{
+        c.classList.toggle('hidden',f!=='all'&&c.dataset.cat!==f);
+      });
+      const fp=document.querySelector('.featured-post');
+      if(fp) fp.style.display=(f==='all'||fp.dataset.cat===f)?'grid':'none';
+    });
+  });
+</script>
+</body>
+</html>
