@@ -1,7 +1,4 @@
-# Netlify Redirects
-
-# Redirect root to index
-/home  /index.html  200
-
-# Handle 404s gracefully
-/*     /index.html  404
+/home              /index.html        200
+/blog              /blog.html         200
+/blog/:slug        /blog/:slug.html   200
+/*                 /index.html        404
