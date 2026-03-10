@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXX"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-XXXX');
-</script>
-
   <meta charset="UTF-8" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
@@ -95,6 +86,28 @@ gtag('config', 'G-XXXX');
     .nav-links { display: flex; gap: 36px; list-style: none; }
     .nav-links a { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text2); text-decoration: none; font-family: var(--mono); transition: color 0.2s; }
     .nav-links a:hover { color: var(--green); }
+    /* ── GUIDES DROPDOWN ── */
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text2); text-decoration: none; font-family: var(--mono); transition: color 0.2s; background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 6px; }
+    .nav-dropdown-btn:hover { color: var(--green); }
+    .nav-dropdown-btn svg { transition: transform 0.2s; }
+    .nav-dropdown:hover .nav-dropdown-btn svg,
+    .nav-dropdown.open .nav-dropdown-btn svg { transform: rotate(180deg); }
+    .nav-dropdown-menu { position: absolute; top: calc(100% + 20px); left: 50%; transform: translateX(-50%); width: 480px; background: rgba(5,10,8,0.98); border: 1px solid rgba(0,194,122,0.18); border-radius: 10px; padding: 8px; backdrop-filter: blur(32px); opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 2000; box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 40px rgba(0,194,122,0.05); }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown.open .nav-dropdown-menu { opacity: 1; visibility: visible; top: calc(100% + 12px); }
+    .nav-dropdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+    .nav-dd-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 6px; text-decoration: none; transition: background 0.15s; }
+    .nav-dd-item:hover { background: rgba(0,194,122,0.07); }
+    .nav-dd-icon { font-size: 20px; margin-top: 1px; flex-shrink: 0; }
+    .nav-dd-text {}
+    .nav-dd-title { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--text); letter-spacing: .5px; margin-bottom: 2px; }
+    .nav-dd-desc { font-family: var(--mono); font-size: 10px; color: var(--text3); line-height: 1.5; }
+    .nav-dd-footer { border-top: 1px solid rgba(0,194,122,0.08); padding: 10px 14px 4px; display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+    .nav-dd-footer-text { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+    .nav-dd-footer-link { font-family: var(--mono); font-size: 10px; color: var(--green); text-decoration: none; }
+    .nav-dd-footer-link:hover { text-decoration: underline; }
+
     .nav-cta { background: var(--green); color: #000; font-family: var(--mono); font-size: 12px; letter-spacing: 1px; padding: 10px 22px; border-radius: 4px; text-decoration: none; font-weight: 700; transition: all 0.2s; }
     .nav-cta:hover { background: #fff; box-shadow: 0 0 24px var(--green-glow); }
 
@@ -280,6 +293,10 @@ gtag('config', 'G-XXXX');
       footer { flex-direction: column; gap: 16px; text-align: center; }
       .footer-links { flex-wrap: wrap; justify-content: center; }
     }
+
+    @media(max-width:768px){
+      [style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:1fr !important}
+    }
   </style>
 </head>
 <body>
@@ -294,6 +311,62 @@ gtag('config', 'G-XXXX');
   <ul class="nav-links">
     <li><a href="#how">How it Works</a></li>
     <li><a href="#features">Features</a></li>
+    <li class="nav-dropdown" id="guidesDropdown">
+      <button class="nav-dropdown-btn" onclick="toggleDropdown()">
+        Guides
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="nav-dropdown-menu">
+        <div class="nav-dropdown-grid">
+          <a class="nav-dd-item" href="ai-seo-tools.html#tools">
+            <div class="nav-dd-icon">🔍</div>
+            <div class="nav-dd-text">
+              <div class="nav-dd-title">AI SEO Tools</div>
+              <div class="nav-dd-desc">30 tools for keyword research & rankings</div>
+            </div>
+          </a>
+          <a class="nav-dd-item" href="chatgpt-seo-tools.html#tools">
+            <div class="nav-dd-icon">🤖</div>
+            <div class="nav-dd-text">
+              <div class="nav-dd-title">ChatGPT SEO Tools</div>
+              <div class="nav-dd-desc">AI tools for keyword research & content</div>
+            </div>
+          </a>
+          <a class="nav-dd-item" href="ai-marketing-tools.html#tools">
+            <div class="nav-dd-icon">📈</div>
+            <div class="nav-dd-text">
+              <div class="nav-dd-title">AI Marketing Tools</div>
+              <div class="nav-dd-desc">40 tools for digital marketing</div>
+            </div>
+          </a>
+          <a class="nav-dd-item" href="ai-search-tools.html#tools">
+            <div class="nav-dd-icon">🔎</div>
+            <div class="nav-dd-text">
+              <div class="nav-dd-title">AI Search Tools</div>
+              <div class="nav-dd-desc">Top AI search engines & research tools</div>
+            </div>
+          </a>
+          <a class="nav-dd-item" href="ai-content-tools.html#tools">
+            <div class="nav-dd-icon">✍️</div>
+            <div class="nav-dd-text">
+              <div class="nav-dd-title">AI Content Tools</div>
+              <div class="nav-dd-desc">40 tools for content creation</div>
+            </div>
+          </a>
+          <a class="nav-dd-item" href="ai-productivity-tools.html#tools">
+            <div class="nav-dd-icon">⚡</div>
+            <div class="nav-dd-text">
+              <div class="nav-dd-title">AI Productivity Tools</div>
+              <div class="nav-dd-desc">40 tools for work & automation</div>
+            </div>
+          </a>
+        </div>
+        <div class="nav-dd-footer">
+          <span class="nav-dd-footer-text">// 6 deep-dive guides · updated 2026</span>
+          <a class="nav-dd-footer-link" href="blog.html">View all articles →</a>
+        </div>
+      </div>
+    </li>
     <li><a href="blog.html">Blog</a></li>
     <li><a href="contact.html">Contact</a></li>
     <li><a href="login.html">Login</a></li>
@@ -309,6 +382,13 @@ gtag('config', 'G-XXXX');
 <div class="nav-mobile" id="navMobile">
   <a href="#how" onclick="closeMobileNav()">How it Works</a>
   <a href="#features" onclick="closeMobileNav()">Features</a>
+  <div style="padding:14px 0 6px;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;border-bottom:1px solid rgba(0,194,122,0.06)">// Guides</div>
+  <a href="ai-seo-tools.html#tools" style="padding-left:12px">🔍 AI SEO Tools</a>
+  <a href="chatgpt-seo-tools.html#tools" style="padding-left:12px">🤖 ChatGPT SEO Tools</a>
+  <a href="ai-marketing-tools.html#tools" style="padding-left:12px">📈 AI Marketing Tools</a>
+  <a href="ai-search-tools.html#tools" style="padding-left:12px">🔎 AI Search Tools</a>
+  <a href="ai-content-tools.html#tools" style="padding-left:12px">✍️ AI Content Tools</a>
+  <a href="ai-productivity-tools.html#tools" style="padding-left:12px">⚡ AI Productivity Tools</a>
   <a href="blog.html">Blog</a>
   <a href="contact.html">Contact</a>
   <a href="login.html">Login / Sign Up</a>
@@ -612,6 +692,109 @@ gtag('config', 'G-XXXX');
         <div class="faq-q">Does it work on mobile?<span class="faq-arrow">+</span></div>
         <div class="faq-a">The extension requires a desktop browser — Chrome extensions are not supported on mobile Chrome or Safari on iOS/Android. For best results use it on a desktop or laptop running Chrome, Edge, or Brave.</div>
       </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- RESOURCES / LANDING PAGES SECTION -->
+<section style="background: var(--bg2);">
+  <div class="section-inner">
+    <div class="section-tag reveal">// Resources</div>
+    <h2 class="section-h reveal">AI Tool <span style="color:var(--green)">Guides</span></h2>
+    <p class="section-desc reveal">Deep-dive guides on AI SEO tools, marketing platforms, and search intelligence — everything you need to build an AI-powered workflow.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px" class="reveal">
+
+      <a href="ai-seo-tools.html" style="background:var(--bg);border:1px solid rgba(0,194,122,0.1);border-radius:8px;padding:28px;text-decoration:none;display:block;transition:all .2s" onmouseover="this.style.borderColor='rgba(0,194,122,0.4)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='rgba(0,194,122,0.1)';this.style.transform='translateY(0)'">
+        <div style="font-size:28px;margin-bottom:14px">🔍</div>
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:8px">SEO</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-.3px">Best AI SEO Tools</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text2);line-height:1.7">30 AI-powered SEO platforms for keyword research, content optimization, and higher rankings.</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--green);margin-top:14px">Explore guide →</div>
+      </a>
+
+      <a href="chatgpt-seo-tools.html" style="background:var(--bg);border:1px solid rgba(0,194,122,0.1);border-radius:8px;padding:28px;text-decoration:none;display:block;transition:all .2s" onmouseover="this.style.borderColor='rgba(0,194,122,0.4)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='rgba(0,194,122,0.1)';this.style.transform='translateY(0)'">
+        <div style="font-size:28px;margin-bottom:14px">🤖</div>
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:8px">SEO</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-.3px">ChatGPT SEO Tools</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text2);line-height:1.7">The top AI tools using ChatGPT for keyword research, content, and search optimization.</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--green);margin-top:14px">Explore guide →</div>
+      </a>
+
+      <a href="ai-marketing-tools.html" style="background:var(--bg);border:1px solid rgba(0,194,122,0.1);border-radius:8px;padding:28px;text-decoration:none;display:block;transition:all .2s" onmouseover="this.style.borderColor='rgba(0,194,122,0.4)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='rgba(0,194,122,0.1)';this.style.transform='translateY(0)'">
+        <div style="font-size:28px;margin-bottom:14px">📈</div>
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:8px">Marketing</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-.3px">Best AI Marketing Tools</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text2);line-height:1.7">40 AI tools for content, SEO, social media, email, and marketing automation.</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--green);margin-top:14px">Explore guide →</div>
+      </a>
+
+      <a href="ai-search-tools.html" style="background:var(--bg);border:1px solid rgba(0,194,122,0.1);border-radius:8px;padding:28px;text-decoration:none;display:block;transition:all .2s" onmouseover="this.style.borderColor='rgba(0,194,122,0.4)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='rgba(0,194,122,0.1)';this.style.transform='translateY(0)'">
+        <div style="font-size:28px;margin-bottom:14px">🔎</div>
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:8px">Search</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-.3px">Best AI Search Tools</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text2);line-height:1.7">Top AI search engines and research tools — ChatGPT search, Perplexity AI, and more.</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--green);margin-top:14px">Explore guide →</div>
+      </a>
+
+      <a href="ai-content-tools.html" style="background:var(--bg);border:1px solid rgba(0,194,122,0.1);border-radius:8px;padding:28px;text-decoration:none;display:block;transition:all .2s" onmouseover="this.style.borderColor='rgba(0,194,122,0.4)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='rgba(0,194,122,0.1)';this.style.transform='translateY(0)'">
+        <div style="font-size:28px;margin-bottom:14px">✍️</div>
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:8px">Content</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-.3px">Best AI Content Tools</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text2);line-height:1.7">40 AI writing tools and content generators for bloggers, marketers, and creators.</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--green);margin-top:14px">Explore guide →</div>
+      </a>
+
+      <a href="ai-productivity-tools.html" style="background:var(--bg);border:1px solid rgba(0,194,122,0.1);border-radius:8px;padding:28px;text-decoration:none;display:block;transition:all .2s" onmouseover="this.style.borderColor='rgba(0,194,122,0.4)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='rgba(0,194,122,0.1)';this.style.transform='translateY(0)'">
+        <div style="font-size:28px;margin-bottom:14px">⚡</div>
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:8px">Productivity</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-.3px">Best AI Productivity Tools</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text2);line-height:1.7">40 AI tools for work automation, task management, and business efficiency.</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--green);margin-top:14px">Explore guide →</div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- BLOG SECTION -->
+<section>
+  <div class="section-inner">
+    <div class="section-tag reveal">// Blog</div>
+    <h2 class="section-h reveal">Latest <span style="color:var(--green)">Articles</span></h2>
+    <p class="section-desc reveal">Tutorials, SEO strategies, and research insights for extracting intelligence from AI search.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px" class="reveal">
+
+      <a href="blog/chatgpt-search-engine-guide" style="background:var(--bg2);border:1px solid rgba(0,194,122,0.08);border-radius:8px;overflow:hidden;text-decoration:none;display:block;transition:all .2s" onmouseover="this.style.borderColor='rgba(0,194,122,0.3)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='rgba(0,194,122,0.08)';this.style.transform='translateY(0)'">
+        <div style="height:100px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:36px;border-bottom:1px solid rgba(0,194,122,0.06)">🔎</div>
+        <div style="padding:20px">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--green);text-transform:uppercase;margin-bottom:8px">SEO</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.3">What Is ChatGPT Search & How Does It Work?</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text3)">Mar 9, 2026 · 7 min read</div>
+        </div>
+      </a>
+
+      <a href="blog/how-to-extract-chatgpt-queries" style="background:var(--bg2);border:1px solid rgba(0,194,122,0.08);border-radius:8px;overflow:hidden;text-decoration:none;display:block;transition:all .2s" onmouseover="this.style.borderColor='rgba(0,194,122,0.3)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='rgba(0,194,122,0.08)';this.style.transform='translateY(0)'">
+        <div style="height:100px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:36px;border-bottom:1px solid rgba(0,194,122,0.06)">🔍</div>
+        <div style="padding:20px">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--green);text-transform:uppercase;margin-bottom:8px">Tutorial</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.3">How to Extract 500+ Queries from ChatGPT in One Session</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text3)">Mar 9, 2026 · 8 min read</div>
+        </div>
+      </a>
+
+      <a href="blog/chatgpt-prompts-for-seo" style="background:var(--bg2);border:1px solid rgba(0,194,122,0.08);border-radius:8px;overflow:hidden;text-decoration:none;display:block;transition:all .2s" onmouseover="this.style.borderColor='rgba(0,194,122,0.3)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='rgba(0,194,122,0.08)';this.style.transform='translateY(0)'">
+        <div style="height:100px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:36px;border-bottom:1px solid rgba(0,194,122,0.06)">💡</div>
+        <div style="padding:20px">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--green);text-transform:uppercase;margin-bottom:8px">SEO</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.3">100 ChatGPT Prompts for SEO (Free List)</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text3)">Mar 9, 2026 · 8 min read</div>
+        </div>
+      </a>
+
+    </div>
+    <div style="text-align:center;margin-top:36px" class="reveal">
+      <a href="blog.html" style="font-family:var(--mono);font-size:12px;color:var(--green);border:1px solid rgba(0,194,122,0.3);padding:12px 28px;border-radius:4px;text-decoration:none;transition:all .2s" onmouseover="this.style.background='var(--green-dim)'" onmouseout="this.style.background='transparent'">View All Articles →</a>
     </div>
   </div>
 </section>

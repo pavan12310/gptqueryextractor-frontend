@@ -18,7 +18,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What are AI productivity tools?","acceptedAnswer":{"@type":"Answer","text":"AI productivity tools are applications that use artificial intelligence to automate tasks, organize workflows, and improve workplace efficiency."}},{"@type":"Question","name":"What are the best AI productivity tools?","acceptedAnswer":{"@type":"Answer","text":"Popular AI productivity tools include Notion AI, ClickUp AI, Grammarly AI, Otter AI, and Zapier AI."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What are AI productivity tools?","acceptedAnswer":{"@type":"Answer","text":"AI productivity tools are applications that use artificial intelligence to automate tasks, organize workflows, and improve workplace efficiency."}},{"@type":"Question","name":"What are the best AI productivity tools?","acceptedAnswer":{"@type":"Answer","text":"Popular AI productivity tools include Notion AI, ClickUp AI, Grammarly AI, Otter AI, and Zapier AI."}}]}
+  function toggleDropdown() {
+    const dd = document.getElementById('guidesDropdown');
+    dd.classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    const dd = document.getElementById('guidesDropdown');
+    if (dd && !dd.contains(e.target)) dd.classList.remove('open');
+  });
+</script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{--bg:#050a08;--bg2:#0a1410;--bg3:#0f1e16;--green:#00c27a;--green-dim:rgba(0,194,122,0.1);--green-glow:rgba(0,194,122,0.35);--text:#e0ede7;--text2:#7aaa90;--text3:#3d6352;--mono:'Space Mono',monospace;--display:'Syne',sans-serif}
@@ -122,6 +131,24 @@
       .cta-block{padding:40px 24px}
       footer{flex-direction:column;gap:16px;text-align:center}.footer-links{justify-content:center}
     }
+
+    /* ── GUIDES DROPDOWN ── */
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text2); background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 6px; font-family: var(--mono); transition: color 0.2s; }
+    .nav-dropdown-btn:hover { color: var(--green); }
+    .nav-dropdown-btn svg { transition: transform 0.2s; }
+    .nav-dropdown:hover .nav-dropdown-btn svg, .nav-dropdown.open .nav-dropdown-btn svg { transform: rotate(180deg); }
+    .nav-dropdown-menu { position: absolute; top: calc(100% + 20px); left: 50%; transform: translateX(-50%); width: 480px; background: rgba(5,10,8,0.98); border: 1px solid rgba(0,194,122,0.18); border-radius: 10px; padding: 8px; backdrop-filter: blur(32px); opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 2000; box-shadow: 0 24px 64px rgba(0,0,0,0.6); }
+    .nav-dropdown:hover .nav-dropdown-menu, .nav-dropdown.open .nav-dropdown-menu { opacity: 1; visibility: visible; top: calc(100% + 12px); }
+    .nav-dropdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+    .nav-dd-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 6px; text-decoration: none; transition: background 0.15s; }
+    .nav-dd-item:hover { background: rgba(0,194,122,0.07); }
+    .nav-dd-icon { font-size: 20px; margin-top: 1px; flex-shrink: 0; }
+    .nav-dd-title { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--text); letter-spacing: .5px; margin-bottom: 2px; }
+    .nav-dd-desc { font-family: var(--mono); font-size: 10px; color: var(--text3); line-height: 1.5; }
+    .nav-dd-footer { border-top: 1px solid rgba(0,194,122,0.08); padding: 10px 14px 4px; display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+    .nav-dd-footer-text { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+    .nav-dd-footer-link { font-family: var(--mono); font-size: 10px; color: var(--green); text-decoration: none; }
   </style>
 </head>
 <body>
@@ -132,6 +159,38 @@
   <a href="index.html" class="nav-logo">GPT<span>/</span>Query<span>/</span>Extractor</a>
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
+        <li class="nav-dropdown" id="guidesDropdown">
+      <button class="nav-dropdown-btn" onclick="toggleDropdown()">
+        Guides
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="nav-dropdown-menu">
+        <div class="nav-dropdown-grid">
+          <a class="nav-dd-item" href="ai-seo-tools.html#tools">
+            <div class="nav-dd-icon">🔍</div><div><div class="nav-dd-title">AI SEO Tools</div><div class="nav-dd-desc">30 tools for keyword research</div></div>
+          </a>
+          <a class="nav-dd-item" href="chatgpt-seo-tools.html#tools">
+            <div class="nav-dd-icon">🤖</div><div><div class="nav-dd-title">ChatGPT SEO Tools</div><div class="nav-dd-desc">AI tools for keyword & content</div></div>
+          </a>
+          <a class="nav-dd-item" href="ai-marketing-tools.html#tools">
+            <div class="nav-dd-icon">📈</div><div><div class="nav-dd-title">AI Marketing Tools</div><div class="nav-dd-desc">40 tools for digital marketing</div></div>
+          </a>
+          <a class="nav-dd-item" href="ai-search-tools.html#tools">
+            <div class="nav-dd-icon">🔎</div><div><div class="nav-dd-title">AI Search Tools</div><div class="nav-dd-desc">Top AI search engines</div></div>
+          </a>
+          <a class="nav-dd-item" href="ai-content-tools.html#tools">
+            <div class="nav-dd-icon">✍️</div><div><div class="nav-dd-title">AI Content Tools</div><div class="nav-dd-desc">40 tools for content creation</div></div>
+          </a>
+          <a class="nav-dd-item" href="ai-productivity-tools.html#tools">
+            <div class="nav-dd-icon">⚡</div><div><div class="nav-dd-title">AI Productivity Tools</div><div class="nav-dd-desc">40 tools for work & automation</div></div>
+          </a>
+        </div>
+        <div class="nav-dd-footer">
+          <span class="nav-dd-footer-text">// 6 guides · 2026</span>
+          <a class="nav-dd-footer-link" href="blog.html">View all articles →</a>
+        </div>
+      </div>
+    </li>
     <li><a href="blog.html">Blog</a></li>
     <li><a href="contact.html">Contact</a></li>
     <li><a href="login.html">Login</a></li>
