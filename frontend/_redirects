@@ -1,4 +1,10 @@
-/home              /index.html        200
-/blog              /blog.html         200
-/blog/:slug        /blog/:slug.html   200
-/404               /index.html        200
+/home                    /index.html                    200
+/blog                    /blog.html                     200
+/blog/:slug              /blog/:slug.html               200
+/ai-seo-tools            /ai-seo-tools.html             200
+/chatgpt-seo-tools       /chatgpt-seo-tools.html        200
+/ai-marketing-tools      /ai-marketing-tools.html       200
+/ai-search-tools         /ai-search-tools.html          200
+/ai-content-tools        /ai-content-tools.html         200
+/ai-productivity-tools   /ai-productivity-tools.html    200
+/404                     /index.html                    200
