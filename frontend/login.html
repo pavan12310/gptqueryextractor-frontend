@@ -91,6 +91,19 @@
       .auth-left { padding:100px 24px 60px; }
     }
   </style>
+
+  <!-- Mixpanel -->
+  <script type="text/javascript">
+  (function(c,a){window.mixpanel=a;var b,d,h,e;b=c.createElement("script");b.type="text/javascript";
+  b.async=!0;b.src="https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";d=c.getElementsByTagName("script")[0];
+  d.parentNode.insertBefore(b,d);a._i=[];a.init=function(b,c,f){function d(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]);a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var g=a;"undefined"!==typeof f?g=a[f]=[]:f="mixpanel";g.people=g.people||[];h="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config people.set people.increment".split(" ");
+  for(e=0;e<h.length;e++)d(g,h[e]);a._i.push([b,c,f])};a.__SV=1.1;})(document,window.mixpanel||[]);
+  mixpanel.init("a2dd773f2a7c2770d7696b705197a2a0", {
+    track_pageview: true,
+    persistence: "localStorage"
+  });
+  </script>
+  <!-- End Mixpanel -->
 </head>
 <body>
 <div class="cursor" id="cursor"></div>
@@ -349,5 +362,37 @@ s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
 <!--End of Tawk.to Script-->
+
+  <script>
+  window.addEventListener('DOMContentLoaded', function() {
+    mixpanel.track('Page Viewed', { page: 'Login' });
+
+    // Login attempt
+    var loginBtn = document.getElementById('login-btn');
+    if (loginBtn) loginBtn.addEventListener('click', function() {
+      var email = document.getElementById('login-email');
+      mixpanel.track('Login Attempted', { page: 'Login', email: email ? email.value : '' });
+    });
+
+    // Signup attempt
+    var signupBtn = document.getElementById('signup-btn');
+    if (signupBtn) signupBtn.addEventListener('click', function() {
+      mixpanel.track('Signup Attempted', { page: 'Login' });
+    });
+
+    // Tab switches
+    document.querySelectorAll('.tab-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        mixpanel.track('Auth Tab Switched', { tab: btn.textContent.trim() });
+      });
+    });
+
+    // Forgot password
+    var forgotLink = document.querySelector('[onclick*="forgot"]');
+    if (forgotLink) forgotLink.addEventListener('click', function() {
+      mixpanel.track('Forgot Password Clicked');
+    });
+  });
+  </script>
 </body>
 </html>
