@@ -1,10 +1,42 @@
-/home                    /index.html                    200
-/blog                    /blog.html                     200
-/blog/:slug              /blog/:slug.html               200
-/ai-seo-tools            /ai-seo-tools.html             200
-/chatgpt-seo-tools       /chatgpt-seo-tools.html        200
-/ai-marketing-tools      /ai-marketing-tools.html       200
-/ai-search-tools         /ai-search-tools.html          200
-/ai-content-tools        /ai-content-tools.html         200
-/ai-productivity-tools   /ai-productivity-tools.html    200
-/404                     /index.html                    200
+# ── Root ──
+/                                              /index.html                                    200
+/home                                          /index.html                                    200
+
+# ── Main pages ──
+/blog                                          /blog.html                                     200
+/contact                                       /contact.html                                  200
+/faq                                           /faq.html                                      200
+/login                                         /login.html                                    200
+/dashboard                                     /dashboard.html                                200
+/privacy                                       /privacy.html                                  200
+/terms                                         /terms.html                                    200
+
+# ── Landing / Guide pages ──
+/ai-seo-tools                                  /ai-seo-tools.html                             200
+/chatgpt-seo-tools                             /chatgpt-seo-tools.html                        200
+/ai-marketing-tools                            /ai-marketing-tools.html                       200
+/ai-search-tools                               /ai-search-tools.html                          200
+/ai-content-tools                              /ai-content-tools.html                         200
+/ai-productivity-tools                         /ai-productivity-tools.html                    200
+
+# ── Blog posts ──
+/blog/ai-tools-for-digital-marketing           /blog/ai-tools-for-digital-marketing.html      200
+/blog/best-chatgpt-seo-tools                   /blog/best-chatgpt-seo-tools.html              200
+/blog/best-geo-practices-chatgpt-ranking       /blog/best-geo-practices-chatgpt-ranking.html  200
+/blog/chatgpt-prompts-for-seo                  /blog/chatgpt-prompts-for-seo.html             200
+/blog/chatgpt-search-behavior-10000-queries    /blog/chatgpt-search-behavior-10000-queries.html 200
+/blog/chatgpt-search-engine-guide              /blog/chatgpt-search-engine-guide.html         200
+/blog/chatgpt-search-query-extractor           /blog/chatgpt-search-query-extractor.html      200
+/blog/how-ai-search-is-changing-seo            /blog/how-ai-search-is-changing-seo.html       200
+/blog/how-to-extract-chatgpt-queries           /blog/how-to-extract-chatgpt-queries.html      200
+/blog/how-to-use-chatgpt-query-extractor       /blog/how-to-use-chatgpt-query-extractor.html  200
+/blog/prompt-engineering-for-query-extraction  /blog/prompt-engineering-for-query-extraction.html 200
+/blog/query-data-to-content-brief-workflow     /blog/query-data-to-content-brief-workflow.html 200
+/blog/using-ai-query-data-topical-authority    /blog/using-ai-query-data-topical-authority.html 200
+/blog/v5-6-release-auto-new-chat-session-history /blog/v5-6-release-auto-new-chat-session-history.html 200
+
+# ── Catch-all for any future blog posts ──
+/blog/:slug                                    /blog/:slug.html                               200
+
+# ── 404 fallback ──
+/*                                             /index.html                                    404
