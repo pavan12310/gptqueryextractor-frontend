@@ -62,7 +62,7 @@
     .post-card{background:var(--bg2);border:1px solid rgba(0,194,122,0.08);border-radius:8px;overflow:hidden;transition:all .2s;text-decoration:none;color:inherit;display:block}
     .post-card:hover{border-color:rgba(0,194,122,0.3);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
     .post-card.hidden{display:none}
-    .post-thumb{height:180px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:44px;border-bottom:1px solid rgba(0,194,122,0.06);overflow:hidden}.post-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s ease}.post-card:hover .post-thumb img{transform:scale(1.05)}
+    .post-thumb{height:140px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:44px;border-bottom:1px solid rgba(0,194,122,0.06)}
     .post-body{padding:24px}
     .post-cat{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:10px}
     .post-title{font-size:17px;font-weight:700;letter-spacing:-.3px;margin-bottom:10px;line-height:1.3;color:var(--text)}
@@ -84,19 +84,6 @@
       footer{flex-direction:column;gap:16px;text-align:center}.footer-links{justify-content:center}
     }
   </style>
-
-  
-<!-- Mixpanel -->
-<script type="text/javascript">
-  (function(e,c){if(!c.__SV){var l,h;window.mixpanel=c;c._i=[];c.init=function(q,r,f){function t(d,a){var g=a.split(".");2==g.length&&(d=d[g[0]],a=g[1]);d[a]=function(){d.push([a].concat(Array.prototype.slice.call(arguments,0)))}}var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";b.people=b.people||[];b.toString=function(d){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);d||(a+=" (stub)");return a};b.people.toString=function(){return b.toString(1)+".people (stub)"};l="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
-  for(h=0;h<l.length;h++)t(b,l[h]);var n="set set_once union unset remove delete".split(" ");b.get_group=function(){function d(p){a[p]=function(){b.push([g,[p].concat(Array.prototype.slice.call(arguments,0))])}}for(var a={},g=["get_group"].concat(Array.prototype.slice.call(arguments,0)),m=0;m<n.length;m++)d(n[m]);return a};c._i.push([q,r,f])};c.__SV=1.2;var k=e.createElement("script");k.type="text/javascript";k.async=!0;k.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===
-  e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";e=e.getElementsByTagName("script")[0];e.parentNode.insertBefore(k,e)}})(document,window.mixpanel||[])
-  mixpanel.init('b2240bfec4a06810b1edca9dda1e3c0b', {
-    autocapture: true,
-    record_sessions_percent: 100,
-  })
-</script>
-<!-- End Mixpanel -->
 </head>
 <body>
 <div class="cursor" id="cursor"></div>
@@ -147,87 +134,15 @@
         <span class="fp-read">Read article →</span>
       </div>
     </div>
-    <div class="fp-visual" style="padding:0;overflow:hidden"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773748073/Gemini_Generated_Image_97560r97560r9756_ail50m.png" alt="ChatGPT Search Engine Guide" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px"></div>
+    <div class="fp-visual">🔎</div>
   </a>
 
   <!-- POST GRID -->
-  <!-- ══ TO ADD A NEW POST: copy one post-card block inside postsGrid, update href/emoji/cat/title/desc/date ══ -->
+  <!-- ══ TO ADD A NEW POST: copy one post-card block, update href/emoji/title/desc/date ══ -->
   <div class="posts-grid" id="postsGrid">
 
-
-    <a class="post-card" data-cat="SEO" href="/blog/rank-website-chatgpt-search-geo-strategy">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773748074/Gemini_Generated_Image_i7x4xli7x4xli7x4_i13dqj.png" alt="Rank Website Chatgpt Search Geo Strategy" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
-      <div class="post-body">
-        <div class="post-cat">SEO</div>
-        <div class="post-title">How to Rank Your Website in ChatGPT Search (Complete GEO Strategy)</div>
-        <div class="post-desc">Step-by-step GEO strategy to get your content appearing in ChatGPT-generated answers.</div>
-        <div class="post-meta"><span>Mar 17, 2026</span><span class="post-read-link">Read →</span></div>
-      </div>
-    </a>
-
-    <a class="post-card" data-cat="Research" href="/blog/best-ai-chatbot-comparison">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773748074/Gemini_Generated_Image_62zq1n62zq1n62zq_ugctto.png" alt="Best Ai Chatbot Comparison" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
-      <div class="post-body">
-        <div class="post-cat">Research</div>
-        <div class="post-title">Best AI Chatbot 2026: ChatGPT vs Claude vs Gemini vs Perplexity vs Grok</div>
-        <div class="post-desc">Full comparison of the top AI chatbots — features, strengths, and which is best for your use case.</div>
-        <div class="post-meta"><span>Mar 17, 2026</span><span class="post-read-link">Read →</span></div>
-      </div>
-    </a>
-
-    <a class="post-card" data-cat="SEO" href="/blog/best-free-ai-tools">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773748073/Gemini_Generated_Image_95q0iv95q0iv95q0_ehyltg.png" alt="Best Free Ai Tools" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
-      <div class="post-body">
-        <div class="post-cat">SEO</div>
-        <div class="post-title">Best Free AI Tools 2026: Video, Image, Voice, Music & Resume Generators</div>
-        <div class="post-desc">The top free AI tools across every category — from video creation to resume building.</div>
-        <div class="post-meta"><span>Mar 17, 2026</span><span class="post-read-link">Read →</span></div>
-      </div>
-    </a>
-
-
-    <a class="post-card" data-cat="Tutorial" href="/blog/free-ai-tools-for-youtube">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773748076/Gemini_Generated_Image_ofzm42ofzm42ofzm_evbymm.png" alt="Free Ai Tools For Youtube" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
-      <div class="post-body">
-        <div class="post-cat">Tutorial</div>
-        <div class="post-title">Best Free AI Tools for YouTube in 2026 (Complete Creator Guide)</div>
-        <div class="post-desc">Video generators, voice AI, script tools, thumbnails, and editing — the full YouTube AI stack.</div>
-        <div class="post-meta"><span>Mar 17, 2026</span><span class="post-read-link">Read →</span></div>
-      </div>
-    </a>
-
-    <a class="post-card" data-cat="SEO" href="/blog/free-ai-tools-for-instagram">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773748077/Gemini_Generated_Image_ez25v7ez25v7ez25_dr3nml.png" alt="Free Ai Tools For Instagram" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
-      <div class="post-body">
-        <div class="post-cat">SEO</div>
-        <div class="post-title">Best Free AI Tools for Instagram in 2026 (Grow Faster with AI)</div>
-        <div class="post-desc">Reels, captions, hashtags, images and growth tools — everything you need to scale on Instagram.</div>
-        <div class="post-meta"><span>Mar 17, 2026</span><span class="post-read-link">Read →</span></div>
-      </div>
-    </a>
-
-    <a class="post-card" data-cat="Tutorial" href="/blog/free-ai-tools-for-students">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773748076/Gemini_Generated_Image_x6l464x6l464x6l4_d0z56h.png" alt="Free Ai Tools For Students" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
-      <div class="post-body">
-        <div class="post-cat">Tutorial</div>
-        <div class="post-title">Best Free AI Tools for Students in 2026 (Study Smarter with AI)</div>
-        <div class="post-desc">Writing, homework help, notes, research, and presentations — AI tools every student needs.</div>
-        <div class="post-meta"><span>Mar 17, 2026</span><span class="post-read-link">Read →</span></div>
-      </div>
-    </a>
-
-    <a class="post-card" data-cat="SEO" href="/blog/best-geo-practices-chatgpt-ranking">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773748075/Gemini_Generated_Image_38qgl038qgl038qg_jrhf4m.png" alt="Best Geo Practices Chatgpt Ranking" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
-      <div class="post-body">
-        <div class="post-cat">SEO</div>
-        <div class="post-title">Best GEO Practices to Rank on ChatGPT and AI Search Engines</div>
-        <div class="post-desc">How generative engine optimization helps your content appear in AI-generated answers.</div>
-        <div class="post-meta"><span>Mar 17, 2026</span><span class="post-read-link">Read →</span></div>
-      </div>
-    </a>
-
     <a class="post-card" data-cat="Tutorial" href="/blog/how-to-extract-chatgpt-queries">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773748072/Gemini_Generated_Image_hgk17zhgk17zhgk1_oddwv8.png" alt="How To Extract Chatgpt Queries" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
+      <div class="post-thumb">🔍</div>
       <div class="post-body">
         <div class="post-cat">Tutorial</div>
         <div class="post-title">How to Extract 500+ Search Queries from ChatGPT in One Session</div>
@@ -237,7 +152,7 @@
     </a>
 
     <a class="post-card" data-cat="SEO" href="/blog/using-ai-query-data-topical-authority">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773748016/Gemini_Generated_Image_osk1zhosk1zhosk1_uy5bi2.png" alt="Using Ai Query Data Topical Authority" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
+      <div class="post-thumb">📈</div>
       <div class="post-body">
         <div class="post-cat">SEO</div>
         <div class="post-title">Using AI Query Data to Build Topical Authority in 2026</div>
@@ -247,7 +162,7 @@
     </a>
 
     <a class="post-card" data-cat="Research" href="/blog/chatgpt-search-behavior-10000-queries">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773748016/Gemini_Generated_Image_obk0siobk0siobk0_wesucx.png" alt="Chatgpt Search Behavior 10000 Queries" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
+      <div class="post-thumb">🧪</div>
       <div class="post-body">
         <div class="post-cat">Research</div>
         <div class="post-title">Inside ChatGPT's Search Behaviour: What 10,000 Queries Tell Us</div>
@@ -257,7 +172,7 @@
     </a>
 
     <a class="post-card" data-cat="Update" href="/blog/v5-6-release-auto-new-chat-session-history">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773748016/Gemini_Generated_Image_86my1d86my1d86my_qboado.png" alt="V5 6 Release Auto New Chat Session History" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
+      <div class="post-thumb">🚀</div>
       <div class="post-body">
         <div class="post-cat">Update</div>
         <div class="post-title">v5.6 Released: Auto New Chat, Session History & Better Export</div>
@@ -267,7 +182,7 @@
     </a>
 
     <a class="post-card" data-cat="Tutorial" href="/blog/prompt-engineering-for-query-extraction">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773748015/Gemini_Generated_Image_d644qgd644qgd644_z3py0e.png" alt="Prompt Engineering For Query Extraction" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
+      <div class="post-thumb">⚡</div>
       <div class="post-body">
         <div class="post-cat">Tutorial</div>
         <div class="post-title">Prompt Engineering for Better Query Extraction: What Works</div>
@@ -277,7 +192,7 @@
     </a>
 
     <a class="post-card" data-cat="SEO" href="/blog/query-data-to-content-brief-workflow">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773748016/Gemini_Generated_Image_m2sbqem2sbqem2sb_sh7ewz.png" alt="Query Data To Content Brief Workflow" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
+      <div class="post-thumb">📋</div>
       <div class="post-body">
         <div class="post-cat">SEO</div>
         <div class="post-title">From Query Data to Content Brief: A Complete Workflow</div>
@@ -286,67 +201,64 @@
       </div>
     </a>
 
-    <a class="post-card" data-cat="SEO" href="/blog/chatgpt-search-query-extractor">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773747729/Gemini_Generated_Image_z4dax8z4dax8z4da_xkph5u.png" alt="Chatgpt Search Query Extractor" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
-      <div class="post-body">
-        <div class="post-cat">SEO</div>
-        <div class="post-title">Free SEO Tool: ChatGPT Search Query Extractor</div>
-        <div class="post-desc">How this free Chrome extension helps extract AI search queries for keyword research and SEO strategy.</div>
-        <div class="post-meta"><span>Mar 9, 2026</span><span class="post-read-link">Read →</span></div>
-      </div>
-    </a>
-
-    <a class="post-card" data-cat="SEO" href="/blog/chatgpt-prompts-for-seo">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773747728/Gemini_Generated_Image_4068ms4068ms4068_evlfwt.png" alt="Chatgpt Prompts For Seo" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
-      <div class="post-body">
-        <div class="post-cat">SEO</div>
-        <div class="post-title">100 ChatGPT Prompts for SEO (Free List for Marketers)</div>
-        <div class="post-desc">100 ready-to-use prompts for keyword research, content writing, on-page SEO, and competitor analysis.</div>
-        <div class="post-meta"><span>Mar 9, 2026</span><span class="post-read-link">Read →</span></div>
-      </div>
-    </a>
-
-    <a class="post-card" data-cat="Tutorial" href="/blog/how-to-use-chatgpt-query-extractor">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773747728/Gemini_Generated_Image_tggeuctggeuctgge_koi2lv.png" alt="How To Use Chatgpt Query Extractor" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
-      <div class="post-body">
-        <div class="post-cat">Tutorial</div>
-        <div class="post-title">How to Use ChatGPT Query Extractor (Step-by-Step Guide)</div>
-        <div class="post-desc">Complete walkthrough — prompts, timing, export formats, history, and session management.</div>
-        <div class="post-meta"><span>Mar 9, 2026</span><span class="post-read-link">Read →</span></div>
-      </div>
-    </a>
-
-    <a class="post-card" data-cat="SEO" href="/blog/best-chatgpt-seo-tools">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773747727/Gemini_Generated_Image_sao0hfsao0hfsao0_avqath.png" alt="Best Chatgpt Seo Tools" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
-      <div class="post-body">
-        <div class="post-cat">SEO</div>
-        <div class="post-title">Best ChatGPT SEO Tools (Free & Paid) in 2026</div>
-        <div class="post-desc">The top AI-powered SEO tools for keyword research, content creation, and search optimization.</div>
-        <div class="post-meta"><span>Mar 9, 2026</span><span class="post-read-link">Read →</span></div>
-      </div>
-    </a>
-
-    <a class="post-card" data-cat="SEO" href="/blog/how-ai-search-is-changing-seo">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773747727/Gemini_Generated_Image_uy2fdtuy2fdtuy2f_proo1h.png" alt="How Ai Search Is Changing Seo" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
-      <div class="post-body">
-        <div class="post-cat">SEO</div>
-        <div class="post-title">How AI Search Is Changing SEO (Complete Guide)</div>
-        <div class="post-desc">How AI search engines are transforming ranking strategies, topical authority, and content optimization.</div>
-        <div class="post-meta"><span>Mar 9, 2026</span><span class="post-read-link">Read →</span></div>
-      </div>
-    </a>
-
-    <a class="post-card" data-cat="SEO" href="/blog/ai-tools-for-digital-marketing">
-      <div class="post-thumb"><img src="https://res.cloudinary.com/dehlb7wua/image/upload/v1773748073/Gemini_Generated_Image_97560r97560r9756_ail50m.png" alt="Ai Tools For Digital Marketing" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
-      <div class="post-body">
-        <div class="post-cat">SEO</div>
-        <div class="post-title">50 AI Tools for Digital Marketing (Free & Paid) in 2026</div>
-        <div class="post-desc">The complete list — content, SEO, social media, ads, analytics, design, and video tools.</div>
-        <div class="post-meta"><span>Mar 9, 2026</span><span class="post-read-link">Read →</span></div>
-      </div>
-    </a>
-
   </div>
+  <a class="post-card" data-cat="SEO" href="/blog/chatgpt-search-query-extractor">
+  <div class="post-thumb">🛠️</div>
+  <div class="post-body">
+    <div class="post-cat">SEO</div>
+    <div class="post-title">Free SEO Tool: ChatGPT Search Query Extractor</div>
+    <div class="post-desc">How this free Chrome extension helps extract AI search queries for keyword research and SEO strategy.</div>
+    <div class="post-meta"><span>Mar 9, 2026</span><span class="post-read-link">Read →</span></div>
+  </div>
+</a>
+<a class="post-card" data-cat="SEO" href="/blog/chatgpt-prompts-for-seo">
+  <div class="post-thumb">💡</div>
+  <div class="post-body">
+    <div class="post-cat">SEO</div>
+    <div class="post-title">100 ChatGPT Prompts for SEO (Free List for Marketers)</div>
+    <div class="post-desc">100 ready-to-use prompts for keyword research, content writing, on-page SEO, and competitor analysis.</div>
+    <div class="post-meta"><span>Mar 9, 2026</span><span class="post-read-link">Read →</span></div>
+  </div>
+</a>
+<a class="post-card" data-cat="Tutorial" href="/blog/how-to-use-chatgpt-query-extractor">
+  <div class="post-thumb">📖</div>
+  <div class="post-body">
+    <div class="post-cat">Tutorial</div>
+    <div class="post-title">How to Use ChatGPT Query Extractor (Step-by-Step Guide)</div>
+    <div class="post-desc">Complete walkthrough — prompts, timing, export formats, history, and session management.</div>
+    <div class="post-meta"><span>Mar 9, 2026</span><span class="post-read-link">Read →</span></div>
+  </div>
+</a>
+
+<a class="post-card" data-cat="SEO" href="/blog/best-chatgpt-seo-tools">
+  <div class="post-thumb">🛠️</div>
+  <div class="post-body">
+    <div class="post-cat">SEO</div>
+    <div class="post-title">Best ChatGPT SEO Tools (Free & Paid) in 2026</div>
+    <div class="post-desc">The top AI-powered SEO tools for keyword research, content creation, and search optimization.</div>
+    <div class="post-meta"><span>Mar 9, 2026</span><span class="post-read-link">Read →</span></div>
+  </div>
+</a>
+
+<a class="post-card" data-cat="SEO" href="/blog/how-ai-search-is-changing-seo">
+  <div class="post-thumb">🤖</div>
+  <div class="post-body">
+    <div class="post-cat">SEO</div>
+    <div class="post-title">How AI Search Is Changing SEO (Complete Guide)</div>
+    <div class="post-desc">How AI search engines are transforming ranking strategies, topical authority, and content optimization.</div>
+    <div class="post-meta"><span>Mar 9, 2026</span><span class="post-read-link">Read →</span></div>
+  </div>
+</a>
+
+<a class="post-card" data-cat="SEO" href="/blog/ai-tools-for-digital-marketing">
+  <div class="post-thumb">🚀</div>
+  <div class="post-body">
+    <div class="post-cat">SEO</div>
+    <div class="post-title">50 AI Tools for Digital Marketing (Free & Paid) in 2026</div>
+    <div class="post-desc">The complete list — content, SEO, social media, ads, analytics, design, and video tools.</div>
+    <div class="post-meta"><span>Mar 9, 2026</span><span class="post-read-link">Read →</span></div>
+  </div>
+</a>
   <!-- ══ END POST GRID ══ -->
 </div>
 
@@ -383,43 +295,5 @@
     });
   });
 </script>
-
-<!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/69b25054791b0a1c352a48d6/1jjg8jj9t';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
-<!--End of Tawk.to Script-->
-
-  <script>
-  window.addEventListener('DOMContentLoaded', function() {
-    mixpanel.track('Page Viewed', { page: 'Blog' });
-
-    // Article clicks
-    document.querySelectorAll('.post-card, a[href*="/blog/"]').forEach(function(card) {
-      card.addEventListener('click', function() {
-        var title = card.querySelector('.post-title');
-        mixpanel.track('Blog Post Clicked', {
-          page: 'Blog',
-          post: title ? title.textContent.trim() : card.href
-        });
-      });
-    });
-
-    // Category filter clicks
-    document.querySelectorAll('.filter-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        mixpanel.track('Blog Filter Used', { category: btn.textContent.trim() });
-      });
-    });
-  });
-  </script>
 </body>
 </html>
