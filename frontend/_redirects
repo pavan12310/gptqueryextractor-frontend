@@ -40,3 +40,10 @@
 
 # ── 404 fallback ──
 /*                                             /index.html                                    404
+/blog/what-is-ai-search                        /blog/what-is-ai-search.html                        200
+/blog/chatgpt-search-vs-google-search          /blog/chatgpt-search-vs-google-search.html          200
+/blog/how-chatgpt-generates-search-queries     /blog/how-chatgpt-generates-search-queries.html     200
+/blog/ai-search-engines-explained              /blog/ai-search-engines-explained.html              200
+/blog/top-ai-search-engines                    /blog/top-ai-search-engines.html                    200
+/blog/how-to-rank-in-ai-search                 /blog/how-to-rank-in-ai-search.html                 200
+/blog/chatgpt-prompts-for-keyword-research     /blog/chatgpt-prompts-for-keyword-research.html     200
